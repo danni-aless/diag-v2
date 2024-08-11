@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="diagv2_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="diagv2_tb" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="142.225 ns"></ZoomEndTime>
+      <Cursor1Time time="104.957 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="152"></NameColumnWidth>
+      <ValueColumnWidth column_width="115"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="16" />
+   <wvobject fp_name="/diagv2_tb/CLK" type="logic">
+      <obj_property name="ElementShortName">CLK</obj_property>
+      <obj_property name="ObjectShortName">CLK</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/RESET" type="logic">
+      <obj_property name="ElementShortName">RESET</obj_property>
+      <obj_property name="ObjectShortName">RESET</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/pc_reg/PC" type="array">
+      <obj_property name="ElementShortName">PC[63:0]</obj_property>
+      <obj_property name="ObjectShortName">PC[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/instr" type="array">
+      <obj_property name="ElementShortName">instr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instr[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/alu/A" type="array">
+      <obj_property name="ElementShortName">A[63:0]</obj_property>
+      <obj_property name="ObjectShortName">A[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/alu/B" type="array">
+      <obj_property name="ElementShortName">B[63:0]</obj_property>
+      <obj_property name="ObjectShortName">B[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/alu/ALUControl" type="array">
+      <obj_property name="ElementShortName">ALUControl[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ALUControl[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/alu/ALU32" type="logic">
+      <obj_property name="ElementShortName">ALU32</obj_property>
+      <obj_property name="ObjectShortName">ALU32</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/alu/out" type="array">
+      <obj_property name="ElementShortName">out[63:0]</obj_property>
+      <obj_property name="ObjectShortName">out[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/alu/zero" type="logic">
+      <obj_property name="ElementShortName">zero</obj_property>
+      <obj_property name="ObjectShortName">zero</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/alu/lt" type="logic">
+      <obj_property name="ElementShortName">lt</obj_property>
+      <obj_property name="ObjectShortName">lt</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/alu/ltu" type="logic">
+      <obj_property name="ElementShortName">ltu</obj_property>
+      <obj_property name="ObjectShortName">ltu</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/reg_file/writeData" type="array">
+      <obj_property name="ElementShortName">writeData[63:0]</obj_property>
+      <obj_property name="ObjectShortName">writeData[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/reg_file/writeRegister" type="array">
+      <obj_property name="ElementShortName">writeRegister[4:0]</obj_property>
+      <obj_property name="ObjectShortName">writeRegister[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/reg_file/we" type="logic">
+      <obj_property name="ElementShortName">we</obj_property>
+      <obj_property name="ObjectShortName">we</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/reg_file/registers[6]" type="array">
+      <obj_property name="ElementShortName">[6][63:0]</obj_property>
+      <obj_property name="ObjectShortName">[6][63:0]</obj_property>
+   </wvobject>
+</wave_config>
