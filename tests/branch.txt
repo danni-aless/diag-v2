@@ -1,0 +1,31 @@
+addi x1, x0, 0x123
+addi x2, x0, 0x456
+addi x3, x0, 0xfff
+addi x4, x0, 0x555
+addi x5, x0, 0x0
+addi x6, x0, 0xfff
+addi x7, x0, 1
+addi x8, x0, 2
+addi x9, x0, 3
+addi x10, x0, 0x0
+addi x11, x0, 0x123
+addi x12, x0, 0x455
+addi x13, x0, 0x1
+addi x14, x0, 0x554
+addi x15, x0, 0xfff
+addi x16, x0, 0xffe
+j test1
+
+test1: beq x1, x11, test2
+test3: bne x2, x12, test4
+test6: blt x3, x13, pass
+test5: bge x4, x14, test6
+test4: bltu x5, x15, test5
+test2: bgeu x6, x16, test3
+j end
+pass:
+    nop
+    addi x20, x20, 0xeef
+    sb x20, 8(x0)
+end:
+    nop
