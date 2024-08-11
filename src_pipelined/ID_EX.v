@@ -14,6 +14,7 @@ module ID_EX(
     input regWrite_in,
     input [`DataBusBits-1:0] readData1_in, readData2_in,
     input [`DataBusBits-1:0] PC_in,
+    input [`RegAddrBits-1:0] readRegister1_in, readRegister2_in,
     input [`RegAddrBits-1:0] writeReg_in,
     input [`DataBusBits-1:0] immExt_in,
     input [`DataBusBits-1:0] PCPlus4_in,
@@ -27,6 +28,7 @@ module ID_EX(
     output reg regWrite_out,
     output reg [`DataBusBits-1:0] readData1_out, readData2_out,
     output reg [`DataBusBits-1:0] PC_out,
+    output reg [`RegAddrBits-1:0] readRegister1_out, readRegister2_out,
     output reg [`RegAddrBits-1:0] writeReg_out,
     output reg [`DataBusBits-1:0] immExt_out,
     output reg [`DataBusBits-1:0] PCPlus4_out
@@ -48,6 +50,8 @@ module ID_EX(
             readData1_out <= `DataZero;
             readData2_out <= `DataZero;
             PC_out <= `DataZero;
+            readRegister1_out <= `RegZero;
+            readRegister2_out <= `RegZero;
             writeReg_out <= `RegZero;
             immExt_out <= `DataZero;
             PCPlus4_out <= `DataZero;
@@ -67,6 +71,8 @@ module ID_EX(
             readData1_out <= readData1_in;
             readData2_out <= readData2_in;
             PC_out <= PC_in;
+            readRegister1_out <= readRegister1_in;
+            readRegister2_out <= readRegister2_in;
             writeReg_out <= writeReg_in;
             immExt_out <= immExt_in;
             PCPlus4_out <= PCPlus4_in;

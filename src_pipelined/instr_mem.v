@@ -11,7 +11,7 @@ module instr_mem(
     assign instr = imem[addr[`DataBusBits-1:2]]; // word-aligned
     
     initial begin
-        $readmemh("addi.mem", imem); // write machine code to instruction memory
+        $readmemh("forwarding.mem", imem); // write machine code to instruction memory
     end
     
 endmodule

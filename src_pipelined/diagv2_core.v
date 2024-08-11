@@ -13,7 +13,7 @@ module diagv2_core(
     output [`MemTypeBusBits-1:0] memTypeM // signal for dmem
     );
     
-    // signals
+    // control signals
     wire [`ImmSrcBusBits-1:0] immSrc;
     wire ALUSrcD, ALUSrcE;
     wire [`AluCntrBusBits-1:0] ALUControlD, ALUControlE;
@@ -24,6 +24,9 @@ module diagv2_core(
     wire [`MemTypeBusBits-1:0] memTypeD, memTypeE;
     wire [`RsltSrcBusBits-1:0] resultSrcD, resultSrcE, resultSrcM, resultSrcW;
     wire regWriteD, regWriteE, regWriteM, regWriteW;
+    
+    // hazard signals
+    wire [`ForwardBusBits-1:0] forwardAE, forwardBE;
 
     wire [`DataBusBits-1:0] PCNext;
     wire [`DataBusBits-1:0] PCD, PCE;
@@ -33,7 +36,8 @@ module diagv2_core(
     wire [`OpBusBits-1:0] op;
     wire [`Funct3BusBits-1:0] funct3D, funct3E;
     wire [`Funct7BusBits-1:0] funct7;
-    wire [`RegAddrBits-1:0] readRegister1, readRegister2;
+    wire [`RegAddrBits-1:0] readRegister1D, readRegister1E;
+    wire [`RegAddrBits-1:0] readRegister2D, readRegister2E;
     wire [`RegAddrBits-1:0] writeRegD, writeRegE, writeRegM, writeRegW;
     wire [`DataBusBits-1:0] writeDataReg;
     wire [`DataBusBits-1:0] readData1D, readData1E;
@@ -58,13 +62,16 @@ module diagv2_core(
     assign op = instrD[6:0];
     assign funct3D = instrD[14:12];
     assign funct7 = instrD[31:25];
-    assign readRegister1 = instrD[19:15];
-    assign readRegister2 = instrD[24:20];
+    assign readRegister1D = instrD[19:15];
+    assign readRegister2D = instrD[24:20];
     assign writeRegD = instrD[11:7];
     
     // EXECUTE
-    assign srcA = readData1E;
-    assign srcB = ALUSrcE ? immExtE : readData2E;
+    assign srcA = forwardAE[1] ? ALUResultM :
+                  forwardAE[0] ? writeDataReg : readData1E;
+    assign srcB = ALUSrcE ? immExtE : 
+                  forwardBE[1] ? ALUResultM :
+                  forwardBE[0] ? writeDataReg : readData2E;
     assign writeDataE = readData2E;
     
     // WRITEBACK
@@ -121,8 +128,8 @@ module diagv2_core(
         .clk(clk),
         .reset(reset),
         .we(regWriteW),
-        .readRegister1(readRegister1),
-        .readRegister2(readRegister2),
+        .readRegister1(readRegister1D),
+        .readRegister2(readRegister2D),
         .writeRegister(writeRegW),
         .writeData(writeDataReg),
         .readData1(readData1D),
@@ -153,6 +160,8 @@ module diagv2_core(
         .readData2_in(readData2D),
         .funct3_out(funct3E),
         .PC_in(PCD),
+        .readRegister1_in(readRegister1D),
+        .readRegister2_in(readRegister2D),
         .writeReg_in(writeRegD),
         .immExt_in(immExtD),
         .PCPlus4_in(PCPlus4D),
@@ -169,6 +178,8 @@ module diagv2_core(
         .readData1_out(readData1E),
         .readData2_out(readData2E),
         .PC_out(PCE),
+        .readRegister1_out(readRegister1E),
+        .readRegister2_out(readRegister2E),
         .writeReg_out(writeRegE),
         .immExt_out(immExtE),
         .PCPlus4_out(PCPlus4E)
@@ -240,6 +251,17 @@ module diagv2_core(
         .writeReg_out(writeRegW),
         .immExt_out(immExtW),
         .PCPlus4_out(PCPlus4W)
+    );
+    
+    hazard_unit hu(
+        .readRegister1E(readRegister1E), 
+        .readRegister2E(readRegister2E),
+        .writeRegM(writeRegM),
+        .writeRegW(writeRegW),
+        .regWriteM(regWriteM),
+        .regWriteW(regWriteW),
+        .forwardAE(forwardAE), 
+        .forwardBE(forwardBE)
     );
     
 endmodule

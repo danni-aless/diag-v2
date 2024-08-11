@@ -20,6 +20,8 @@
 `define MemTypeBusBits  3
 `define RsltSrcBusBits  3
 
+`define ForwardBusBits  2
+
 // opcodes
 `define LUI         7'b0110111
 `define AUIPC       7'b0010111
