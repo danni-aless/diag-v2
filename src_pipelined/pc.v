@@ -4,6 +4,7 @@
 module pc(
     input clk,
     input reset,
+    input we,
     input [`DataBusBits-1:0] PCNext,
     output reg [`DataBusBits-1:0] PC
     );
@@ -11,7 +12,7 @@ module pc(
     always @(posedge clk) begin
         if(reset)
             PC <= `DataZero;
-        else
+        else if(we)
             PC <= PCNext;
     end
 

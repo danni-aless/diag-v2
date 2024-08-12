@@ -26,6 +26,8 @@ module diagv2_core(
     wire regWriteD, regWriteE, regWriteM, regWriteW;
     
     // hazard signals
+    wire stallF, stallD;
+    wire flushD, flushE;
     wire [`ForwardBusBits-1:0] forwardAE, forwardBE;
 
     wire [`DataBusBits-1:0] PCNext;
@@ -33,7 +35,7 @@ module diagv2_core(
     wire [`DataBusBits-1:0] PCPlus4F, PCPlus4D, PCPlus4E, PCPlus4M, PCPlus4W;
     
     wire [`InstrBusBits-1:0] instrD;
-    wire [`OpBusBits-1:0] op;
+    wire [`OpBusBits-1:0] opD;
     wire [`Funct3BusBits-1:0] funct3D, funct3E;
     wire [`Funct7BusBits-1:0] funct7;
     wire [`RegAddrBits-1:0] readRegister1D, readRegister1E;
@@ -59,7 +61,7 @@ module diagv2_core(
     assign PCNext = PCSrc[1] ? ALUResultE : (PCSrc[0] ? PCTargetE : PCPlus4F);
     
     // DECODE
-    assign op = instrD[6:0];
+    assign opD = instrD[6:0];
     assign funct3D = instrD[14:12];
     assign funct7 = instrD[31:25];
     assign readRegister1D = instrD[19:15];
@@ -86,6 +88,7 @@ module diagv2_core(
     pc pc_reg(
         .clk(clk),
         .reset(reset),
+        .we(~stallF), // stalling for load hazard
         .PCNext(PCNext),
         .PC(PCF)
     );
@@ -98,7 +101,8 @@ module diagv2_core(
     
     IF_ID if_id_reg(
         .clk(clk),
-        .reset(reset),
+        .reset(reset | flushD), // flushing for control hazard
+        .we(~stallD), // stalling for load hazard
         .instr_in(instrF),
         .PC_in(PCF),
         .PCPlus4_in(PCPlus4F),
@@ -108,7 +112,7 @@ module diagv2_core(
     );
     
     control_unit cu(
-        .op(op),
+        .op(opD),
         .funct3(funct3D),
         .funct7(funct7),
         .immSrc(immSrc),
@@ -144,7 +148,7 @@ module diagv2_core(
     
     ID_EX id_ex_reg(
         .clk(clk),
-        .reset(reset),
+        .reset(reset | flushE), // flushing for load and control hazard
         .funct3_in(funct3D),
         .ALUSrc_in(ALUSrcD),
         .ALUControl_in(ALUControlD),
@@ -254,12 +258,22 @@ module diagv2_core(
     );
     
     hazard_unit hu(
-        .readRegister1E(readRegister1E), 
+        .opD(opD),
+        .readRegister1D(readRegister1D),
+        .readRegister1E(readRegister1E),
+        .readRegister2D(readRegister2D), 
         .readRegister2E(readRegister2E),
+        .writeRegE(writeRegE),
         .writeRegM(writeRegM),
         .writeRegW(writeRegW),
+        .resultSrcE(resultSrcE),
         .regWriteM(regWriteM),
         .regWriteW(regWriteW),
+        .branch(PCSrc[0]),
+        .stallF(stallF),
+        .stallD(stallD),
+        .flushD(flushD),
+        .flushE(flushE),
         .forwardAE(forwardAE), 
         .forwardBE(forwardBE)
     );

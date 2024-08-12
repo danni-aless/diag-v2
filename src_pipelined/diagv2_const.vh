@@ -3,7 +3,7 @@
 
 `define DataBusBits     64
 `define InstrBusBits    32
-`define RegAddrBits	     5
+`define RegAddrBits      5
 
 `define DataZero    64'b0
 `define DataZero32  32'b0
@@ -19,7 +19,6 @@
 `define Shamt32BusBits  5
 `define MemTypeBusBits  3
 `define RsltSrcBusBits  3
-
 `define ForwardBusBits  2
 
 // opcodes
@@ -72,5 +71,8 @@
 `define MemTypeBU   3'b100
 `define MemTypeHU   3'b101
 `define MemTypeWU   3'b110
+
+// RsltSrc
+`define RsltSrcLOAD 3'b001 
 
 `endif

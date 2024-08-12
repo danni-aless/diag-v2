@@ -4,6 +4,7 @@
 module IF_ID(
     input clk,
     input reset,
+    input we,
     input [`InstrBusBits-1:0] instr_in,
     input [`DataBusBits-1:0] PC_in,
     input [`DataBusBits-1:0] PCPlus4_in,
@@ -18,7 +19,7 @@ module IF_ID(
             PC_out <= `DataZero;
             PCPlus4_out <= `DataZero;
         end
-        else begin
+        else if(we) begin
             instr_out <= instr_in;
             PC_out <= PC_in;
             PCPlus4_out <= PCPlus4_in;
