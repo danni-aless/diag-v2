@@ -7,22 +7,28 @@ module hazard_unit(
         input [`RegAddrBits-1:0] readRegister2D, readRegister2E,
         input [`RegAddrBits-1:0] writeRegE, writeRegM, writeRegW,
         input [`RsltSrcBusBits-1:0] resultSrcE,
+        input [`DataBusBits-1:0] PCD, PCNextE, PCPlus4E,
         input regWriteM, regWriteW,
-        input branch,
+        output PCSrc,
         output stallF, stallD,
         output flushD, flushE,
         output reg [`ForwardBusBits-1:0] forwardAE, forwardBE
     );
     
+    wire validPrediction;
     reg reg1Used, reg2Used, loadStall;
+    
+    // prediction control
+    assign validPrediction = (PCD==PCNextE) | !PCPlus4E;
+    assign PCSrc = validPrediction;
     
     // stalling for load hazard
     assign stallF = loadStall;
     assign stallD = loadStall;
     
     // flushing for load and control hazard
-    assign flushD = branch;
-    assign flushE = loadStall | branch;
+    assign flushD = ~validPrediction;
+    assign flushE = loadStall | ~validPrediction;
     
     // forwarding for data hazard
     always @(*) begin
@@ -41,8 +47,8 @@ module hazard_unit(
     end
     
     always @(*) begin
-        reg1Used = opD!=`LUI & opD!=`AUIPC & opD!=`JAL;
-        reg2Used = opD==`OP | opD==`OP_32 | opD==`STORE | opD==`BRANCH;
+        reg1Used = opD==`JALR | opD==`BRANCH | opD==`LOAD | opD==`STORE | opD==`OP_IMM | opD==`OP | opD==`OP_IMM_32 | opD==`OP_32;
+        reg2Used = opD==`BRANCH | opD==`STORE | opD==`OP | opD==`OP_32;
         loadStall = (resultSrcE==`RsltSrcLOAD) & ((readRegister1D==writeRegE & readRegister1D!=`RegZero & reg1Used) 
                                                 | (readRegister2D==writeRegE & readRegister2D!=`RegZero & reg2Used));
     end

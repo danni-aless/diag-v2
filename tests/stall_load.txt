@@ -1,4 +1,4 @@
-lb x1, 0x2f(x0)
-lb x2, 0x30(x0)
+lb x1, 0x71(x0)
+lb x2, 0x79(x0)
 add x3, x2, x1
 nop

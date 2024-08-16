@@ -9,17 +9,17 @@
 `define DataZero32  32'b0
 `define RegZero	     5'b0
 
-`define PCSrcBusBits    2
-`define OpBusBits       7
-`define Funct3BusBits   3
-`define Funct7BusBits   7
-`define ImmSrcBusBits   3
-`define AluCntrBusBits  4
-`define ShamtBusBits    6
-`define Shamt32BusBits  5
-`define MemTypeBusBits  3
-`define RsltSrcBusBits  3
-`define ForwardBusBits  2
+`define PCNextSrcBusBits    2
+`define OpBusBits           7
+`define Funct3BusBits       3
+`define Funct7BusBits       7
+`define ImmSrcBusBits       3
+`define AluCntrBusBits      4
+`define ShamtBusBits        6
+`define Shamt32BusBits      5
+`define MemTypeBusBits      3
+`define RsltSrcBusBits      3
+`define ForwardBusBits      2
 
 // opcodes
 `define LUI         7'b0110111

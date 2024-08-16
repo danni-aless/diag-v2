@@ -8,7 +8,7 @@ module MEM_WB(
     input regWrite_in,
     input [`DataBusBits-1:0] ALUResult_in,
     input [`DataBusBits-1:0] readData_in,
-    input [`DataBusBits-1:0] PCTarget_in,
+    input [`DataBusBits-1:0] PCPlusImm_in,
     input [`RegAddrBits-1:0] writeReg_in,
     input [`DataBusBits-1:0] immExt_in,
     input [`DataBusBits-1:0] PCPlus4_in,
@@ -16,7 +16,7 @@ module MEM_WB(
     output reg regWrite_out,
     output reg [`DataBusBits-1:0] ALUResult_out,
     output reg [`DataBusBits-1:0] readData_out,
-    output reg [`DataBusBits-1:0] PCTarget_out,
+    output reg [`DataBusBits-1:0] PCPlusImm_out,
     output reg [`RegAddrBits-1:0] writeReg_out,
     output reg [`DataBusBits-1:0] immExt_out,
     output reg [`DataBusBits-1:0] PCPlus4_out
@@ -28,7 +28,7 @@ module MEM_WB(
             regWrite_out <= 1'b0;
             ALUResult_out <= `DataZero;
             readData_out <= `DataZero;
-            PCTarget_out <= `DataZero;
+            PCPlusImm_out <= `DataZero;
             writeReg_out <= `RegZero;
             immExt_out <= `DataZero;
             PCPlus4_out <= `DataZero;
@@ -38,7 +38,7 @@ module MEM_WB(
             regWrite_out <= regWrite_in;
             ALUResult_out <= ALUResult_in;
             readData_out <= readData_in;
-            PCTarget_out <= PCTarget_in;
+            PCPlusImm_out <= PCPlusImm_in;
             writeReg_out <= writeReg_in;
             immExt_out <= immExt_in;
             PCPlus4_out <= PCPlus4_in;

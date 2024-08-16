@@ -12,14 +12,14 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="269.669 ns"></ZoomEndTime>
-      <Cursor1Time time="90.000 ns"></Cursor1Time>
+      <ZoomEndTime time="520.484 ns"></ZoomEndTime>
+      <Cursor1Time time="1,690.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="152"></NameColumnWidth>
-      <ValueColumnWidth column_width="100"></ValueColumnWidth>
+      <ValueColumnWidth column_width="90"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="18" />
+   <WVObjectSize size="22" />
    <wvobject fp_name="/diagv2_tb/CLK" type="logic">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -27,6 +27,10 @@
    <wvobject fp_name="/diagv2_tb/RESET" type="logic">
       <obj_property name="ElementShortName">RESET</obj_property>
       <obj_property name="ObjectShortName">RESET</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/PCSrc" type="logic">
+      <obj_property name="ElementShortName">PCSrc</obj_property>
+      <obj_property name="ObjectShortName">PCSrc</obj_property>
    </wvobject>
    <wvobject fp_name="/diagv2_tb/top/core/pc_reg/PC" type="array">
       <obj_property name="ElementShortName">PC[63:0]</obj_property>
@@ -88,8 +92,20 @@
       <obj_property name="ElementShortName">we</obj_property>
       <obj_property name="ObjectShortName">we</obj_property>
    </wvobject>
-   <wvobject fp_name="/diagv2_tb/top/core/reg_file/registers[1]" type="array">
-      <obj_property name="ElementShortName">[1][63:0]</obj_property>
-      <obj_property name="ObjectShortName">[1][63:0]</obj_property>
+   <wvobject fp_name="/diagv2_tb/top/core/hu/stallF" type="logic">
+      <obj_property name="ElementShortName">stallF</obj_property>
+      <obj_property name="ObjectShortName">stallF</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/hu/stallD" type="logic">
+      <obj_property name="ElementShortName">stallD</obj_property>
+      <obj_property name="ObjectShortName">stallD</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/hu/flushD" type="logic">
+      <obj_property name="ElementShortName">flushD</obj_property>
+      <obj_property name="ObjectShortName">flushD</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/hu/flushE" type="logic">
+      <obj_property name="ElementShortName">flushE</obj_property>
+      <obj_property name="ObjectShortName">flushE</obj_property>
    </wvobject>
 </wave_config>

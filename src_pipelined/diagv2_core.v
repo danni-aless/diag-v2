@@ -19,19 +19,20 @@ module diagv2_core(
     wire [`AluCntrBusBits-1:0] ALUControlD, ALUControlE;
     wire ALU32D, ALU32E;
     wire jalD, jalrD, branchD, jalE, jalrE, branchE;
-    wire [`PCSrcBusBits-1:0] PCSrc;
     wire memWriteD, memWriteE;
     wire [`MemTypeBusBits-1:0] memTypeD, memTypeE;
     wire [`RsltSrcBusBits-1:0] resultSrcD, resultSrcE, resultSrcM, resultSrcW;
     wire regWriteD, regWriteE, regWriteM, regWriteW;
     
     // hazard signals
+    wire PCSrc;
     wire stallF, stallD;
     wire flushD, flushE;
     wire [`ForwardBusBits-1:0] forwardAE, forwardBE;
 
-    wire [`DataBusBits-1:0] PCNext;
+    wire [`DataBusBits-1:0] PCNextF, PCNextE;
     wire [`DataBusBits-1:0] PCD, PCE;
+    wire [`DataBusBits-1:0] PCPrediction;
     wire [`DataBusBits-1:0] PCPlus4F, PCPlus4D, PCPlus4E, PCPlus4M, PCPlus4W;
     
     wire [`InstrBusBits-1:0] instrD;
@@ -49,16 +50,13 @@ module diagv2_core(
     wire [`DataBusBits-1:0] srcA, srcB;
     wire [`DataBusBits-1:0] ALUResultE, ALUResultW;
     wire zero, lt, ltu; // ALU signals
-    wire branchTaken;
     wire [`DataBusBits-1:0] writeDataE;
-    wire [`DataBusBits-1:0] PCTargetE, PCTargetM, PCTargetW;
+    wire [`DataBusBits-1:0] PCPlusImmE, PCPlusImmM, PCPlusImmW;
     
     wire [`DataBusBits-1:0] readDataW;
     
     // FETCH
-    assign PCSrc[0] = jalE | jalrE | (branchE & branchTaken);
-    assign PCSrc[1] = jalrE;
-    assign PCNext = PCSrc[1] ? ALUResultE : (PCSrc[0] ? PCTargetE : PCPlus4F);
+    assign PCNextF = PCSrc ? PCPrediction : PCNextE;
     
     // DECODE
     assign opD = instrD[6:0];
@@ -71,13 +69,12 @@ module diagv2_core(
     // EXECUTE
     assign srcA = forwardAE[1] ? ALUResultM :
                   forwardAE[0] ? writeDataReg : readData1E;
-    assign srcB = ALUSrcE ? immExtE : 
-                  forwardBE[1] ? ALUResultM :
-                  forwardBE[0] ? writeDataReg : readData2E;
-    assign writeDataE = readData2E;
+    assign writeDataE = forwardBE[1] ? ALUResultM :
+                        forwardBE[0] ? writeDataReg : readData2E;
+    assign srcB = ALUSrcE ? immExtE : writeDataE;
     
     // WRITEBACK
-    assign writeDataReg = resultSrcW[2] ? PCTargetW : 
+    assign writeDataReg = resultSrcW[2] ? PCPlusImmW : 
                           resultSrcW[1] ? (resultSrcW[0] ? immExtW : PCPlus4W) 
                                         : (resultSrcW[0] ? readDataW : ALUResultW);
     
@@ -89,14 +86,14 @@ module diagv2_core(
         .clk(clk),
         .reset(reset),
         .we(~stallF), // stalling for load hazard
-        .PCNext(PCNext),
+        .PCNext(PCNextF),
         .PC(PCF)
     );
     
-    adder pc_adder(
-        .in_1(PCF),
-        .in_2(`DataBusBits'd4),
-        .out(PCPlus4F)
+    branch_predictor_bimodal bp(
+        .PC(PCF),
+        .PCPlus4(PCPlus4F),
+        .PCPrediction(PCPrediction)
     );
     
     IF_ID if_id_reg(
@@ -201,14 +198,19 @@ module diagv2_core(
     );
     
     branch_unit bu(
+        .jal(jalE),
+        .jalr(jalrE),
+        .branch(branchE),
         .funct3(funct3E),
         .zero(zero),
         .lt(lt),
         .ltu(ltu),
+        .ALUResult(ALUResultE),
+        .PCPlus4(PCPlus4E),
         .PC(PCE),
         .immExt(immExtE),
-        .PCTarget(PCTargetE),
-        .branchTaken(branchTaken)
+        .PCPlusImm(PCPlusImmE),
+        .PCNext(PCNextE)
     );
     
     EX_MEM ex_mem_reg(
@@ -220,7 +222,7 @@ module diagv2_core(
         .regWrite_in(regWriteE),
         .ALUResult_in(ALUResultE),
         .writeData_in(writeDataE),
-        .PCTarget_in(PCTargetE),
+        .PCPlusImm_in(PCPlusImmE),
         .writeReg_in(writeRegE),
         .immExt_in(immExtE),
         .PCPlus4_in(PCPlus4E),
@@ -230,7 +232,7 @@ module diagv2_core(
         .regWrite_out(regWriteM),
         .ALUResult_out(ALUResultM),
         .writeData_out(writeDataM),
-        .PCTarget_out(PCTargetM),
+        .PCPlusImm_out(PCPlusImmM),
         .writeReg_out(writeRegM),
         .immExt_out(immExtM),
         .PCPlus4_out(PCPlus4M)
@@ -243,7 +245,7 @@ module diagv2_core(
         .regWrite_in(regWriteM),
         .ALUResult_in(ALUResultM),
         .readData_in(readDataM),
-        .PCTarget_in(PCTargetM),
+        .PCPlusImm_in(PCPlusImmM),
         .writeReg_in(writeRegM),
         .immExt_in(immExtM),
         .PCPlus4_in(PCPlus4M),
@@ -251,7 +253,7 @@ module diagv2_core(
         .regWrite_out(regWriteW),
         .ALUResult_out(ALUResultW),
         .readData_out(readDataW),
-        .PCTarget_out(PCTargetW),
+        .PCPlusImm_out(PCPlusImmW),
         .writeReg_out(writeRegW),
         .immExt_out(immExtW),
         .PCPlus4_out(PCPlus4W)
@@ -267,9 +269,12 @@ module diagv2_core(
         .writeRegM(writeRegM),
         .writeRegW(writeRegW),
         .resultSrcE(resultSrcE),
+        .PCD(PCD),
+        .PCNextE(PCNextE),
+        .PCPlus4E(PCPlus4E),
         .regWriteM(regWriteM),
         .regWriteW(regWriteW),
-        .branch(PCSrc[0]),
+        .PCSrc(PCSrc),
         .stallF(stallF),
         .stallD(stallD),
         .flushD(flushD),
