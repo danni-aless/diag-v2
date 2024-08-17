@@ -8,7 +8,8 @@ module branch_unit(
         input [`DataBusBits-1:0] ALUResult, PCPlus4,
         input [`DataBusBits-1:0] PC, immExt,
         output [`DataBusBits-1:0] PCPlusImm,
-        output [`DataBusBits-1:0] PCNext
+        output [`DataBusBits-1:0] PCNext,
+        output branchOp, taken
     );
     
     reg branchTaken;
@@ -17,6 +18,9 @@ module branch_unit(
     assign PCNextSrc[0] = jal | jalr | (branch & branchTaken);
     assign PCNextSrc[1] = jalr;
     assign PCNext = PCNextSrc[1] ? ALUResult : (PCNextSrc[0] ? PCPlusImm : PCPlus4);
+    
+    assign branchOp = jal | jalr | branch;
+    assign taken = PCNextSrc[0];
     
     always @(*) begin
         case(funct3)

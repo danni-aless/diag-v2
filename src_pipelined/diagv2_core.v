@@ -52,6 +52,7 @@ module diagv2_core(
     wire zero, lt, ltu; // ALU signals
     wire [`DataBusBits-1:0] writeDataE;
     wire [`DataBusBits-1:0] PCPlusImmE, PCPlusImmM, PCPlusImmW;
+    wire branchOp, taken;
     
     wire [`DataBusBits-1:0] readDataW;
     
@@ -91,7 +92,13 @@ module diagv2_core(
     );
     
     branch_predictor_bimodal bp(
+        .clk(clk),
+        .reset(reset),
+        .we(branchOp), // write when instruction is jal, jalr, or branch
         .PC(PCF),
+        .PCUpdate(PCE),
+        .targetUpdate(PCNextE),
+        .takenUpdate(taken),
         .PCPlus4(PCPlus4F),
         .PCPrediction(PCPrediction)
     );
@@ -210,7 +217,9 @@ module diagv2_core(
         .PC(PCE),
         .immExt(immExtE),
         .PCPlusImm(PCPlusImmE),
-        .PCNext(PCNextE)
+        .PCNext(PCNextE),
+        .branchOp(branchOp),
+        .taken(taken)
     );
     
     EX_MEM ex_mem_reg(
