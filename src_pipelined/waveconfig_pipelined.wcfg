@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="520.484 ns"></ZoomEndTime>
-      <Cursor1Time time="1,690.000 ns"></Cursor1Time>
+      <ZoomStartTime time="28.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="640.001 ns"></ZoomEndTime>
+      <Cursor1Time time="130.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="152"></NameColumnWidth>
-      <ValueColumnWidth column_width="90"></ValueColumnWidth>
+      <ValueColumnWidth column_width="80"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="22" />
+   <WVObjectSize size="23" />
    <wvobject fp_name="/diagv2_tb/CLK" type="logic">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -107,5 +107,9 @@
    <wvobject fp_name="/diagv2_tb/top/core/hu/flushE" type="logic">
       <obj_property name="ElementShortName">flushE</obj_property>
       <obj_property name="ObjectShortName">flushE</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/hu/validPrediction" type="logic">
+      <obj_property name="ElementShortName">validPrediction</obj_property>
+      <obj_property name="ObjectShortName">validPrediction</obj_property>
    </wvobject>
 </wave_config>

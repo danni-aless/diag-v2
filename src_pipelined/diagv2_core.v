@@ -91,7 +91,7 @@ module diagv2_core(
         .PC(PCF)
     );
     
-    branch_predictor_bimodal bp(
+    branch_predictor_gshare bp(
         .clk(clk),
         .reset(reset),
         .we(branchOp), // write when instruction is jal, jalr, or branch

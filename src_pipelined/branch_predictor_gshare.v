@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 `include "diagv2_const.vh"
 
-module branch_predictor_bimodal(
+module branch_predictor_gshare(
     input clk,
     input reset,
     input we, // when instruction is jal, jalr, or branch
@@ -11,7 +11,7 @@ module branch_predictor_bimodal(
     output [`DataBusBits-1:0] PCPrediction
     );
     
-    parameter N = 10; // BTB index length
+    parameter N = 4; // GHR and BTB index length
     
 //  (N = 10)
 //  PC ADDRESS:
@@ -24,17 +24,20 @@ module branch_predictor_bimodal(
 //          TAG   | TARGET ADDRESS
 //       52 bits  |    64 bits
     
-    reg [1:0] BHT[0:(1<<N)-1]; // branch history table (2-bit saturation counters)
+    reg [N-1:0] GHR; // global history register (N-bit shift register)
+    reg [1:0] PHT[0:(1<<N)-1]; // pattern history table (2-bit saturation counters)
     reg [125-N:0] BTB[0:(1<<N)-1]; // branch target buffer (direct-mapped cache)
     
     wire [61-N:0] PCTag = PC[63:N+2];
     wire [N-1:0] BTBIndex = PC[N+1:2];
+    wire [N-1:0] PHTIndex = PC[N+1:2] ^ GHR;
     wire [61-N:0] BTBTag = BTB[BTBIndex][125-N:64];
-    wire takenPrediction = BHT[BTBIndex][1]; // when counter is strongly or weakly taken
+    wire takenPrediction = PHT[PHTIndex][1]; // when counter is strongly or weakly taken
     wire [63:0] target = BTB[BTBIndex][63:0];
     
     wire [61-N:0] PCTagUpdate = PCUpdate[63:N+2];
     wire [N-1:0] BTBIndexUpdate = PCUpdate[N+1:2];
+    wire [N-1:0] PHTIndexUpdate = PCUpdate[N+1:2] ^ GHR;
     
     assign PCPrediction = (PCTag==BTBTag & takenPrediction) ? target : PCPlus4;
     
@@ -42,23 +45,25 @@ module branch_predictor_bimodal(
     
     always @(negedge clk) begin
         if(reset) begin
+            GHR <= {N{1'b0}};
             for(i=0; i<(1<<N); i=i+1) begin
                 BTB[i] <= {126-N{1'b0}};
-                BHT[i] <= 2'b0;
+                PHT[i] <= 2'b0;
             end
         end
         else if(we) begin
+            GHR <= {GHR[N-2:0], takenUpdate};
             if(takenUpdate)
                 BTB[BTBIndexUpdate] <= {PCTagUpdate, targetUpdate}; // BTB line update
-            case(BHT[BTBIndexUpdate]) // 2-bit saturation counter update
+            case(PHT[PHTIndexUpdate]) // 2-bit saturation counter update
                 2'b00: // strongly not taken
-                    BHT[BTBIndexUpdate] <= takenUpdate ? 2'b01 : 2'b00;
+                    PHT[PHTIndexUpdate] <= takenUpdate ? 2'b01 : 2'b00;
                 2'b01: // weakly not taken
-                    BHT[BTBIndexUpdate] <= takenUpdate ? 2'b10 : 2'b00;
+                    PHT[PHTIndexUpdate] <= takenUpdate ? 2'b10 : 2'b00;
                 2'b10: // weakly taken
-                    BHT[BTBIndexUpdate] <= takenUpdate ? 2'b11 : 2'b01;
+                    PHT[PHTIndexUpdate] <= takenUpdate ? 2'b11 : 2'b01;
                 2'b11: // strongly taken
-                    BHT[BTBIndexUpdate] <= takenUpdate ? 2'b11 : 2'b10;
+                    PHT[PHTIndexUpdate] <= takenUpdate ? 2'b11 : 2'b10;
             endcase
         end
     end
