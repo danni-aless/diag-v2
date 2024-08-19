@@ -10,7 +10,9 @@ module diagv2_core(
     output [`DataBusBits-1:0] ALUResultM,
     output [`DataBusBits-1:0] writeDataM,
     output memWriteM, // signal for dmem
-    output [`MemTypeBusBits-1:0] memTypeM // signal for dmem
+    output [`MemTypeBusBits-1:0] memTypeM, // signal for dmem
+    output ecallW, // signal for testing/debugging
+    output [`DataBusBits-1:0] statusCode // x10 register
     );
     
     // control signals
@@ -23,6 +25,7 @@ module diagv2_core(
     wire [`MemTypeBusBits-1:0] memTypeD, memTypeE;
     wire [`RsltSrcBusBits-1:0] resultSrcD, resultSrcE, resultSrcM, resultSrcW;
     wire regWriteD, regWriteE, regWriteM, regWriteW;
+    wire ecallD, ecallE, ecallM;
     
     // hazard signals
     wire PCSrc;
@@ -129,7 +132,8 @@ module diagv2_core(
         .memWrite(memWriteD),
         .memType(memTypeD),
         .resultSrc(resultSrcD),
-        .regWrite(regWriteD)
+        .regWrite(regWriteD),
+        .ecall(ecallD)
     );
     
     register_file reg_file(
@@ -141,7 +145,8 @@ module diagv2_core(
         .writeRegister(writeRegW),
         .writeData(writeDataReg),
         .readData1(readData1D),
-        .readData2(readData2D)
+        .readData2(readData2D),
+        .statusCode(statusCode)
     );
     
     imm_generator imm_gen(
@@ -164,6 +169,7 @@ module diagv2_core(
         .memType_in(memTypeD),
         .resultSrc_in(resultSrcD),
         .regWrite_in(regWriteD),
+        .ecall_in(ecallD),
         .readData1_in(readData1D),
         .readData2_in(readData2D),
         .funct3_out(funct3E),
@@ -183,6 +189,7 @@ module diagv2_core(
         .memType_out(memTypeE),
         .resultSrc_out(resultSrcE),
         .regWrite_out(regWriteE),
+        .ecall_out(ecallE),
         .readData1_out(readData1E),
         .readData2_out(readData2E),
         .PC_out(PCE),
@@ -229,6 +236,7 @@ module diagv2_core(
         .memType_in(memTypeE),
         .resultSrc_in(resultSrcE),
         .regWrite_in(regWriteE),
+        .ecall_in(ecallE),
         .ALUResult_in(ALUResultE),
         .writeData_in(writeDataE),
         .PCPlusImm_in(PCPlusImmE),
@@ -239,6 +247,7 @@ module diagv2_core(
         .memType_out(memTypeM),
         .resultSrc_out(resultSrcM),
         .regWrite_out(regWriteM),
+        .ecall_out(ecallM),
         .ALUResult_out(ALUResultM),
         .writeData_out(writeDataM),
         .PCPlusImm_out(PCPlusImmM),
@@ -252,6 +261,7 @@ module diagv2_core(
         .reset(reset),
         .resultSrc_in(resultSrcM),
         .regWrite_in(regWriteM),
+        .ecall_in(ecallM),
         .ALUResult_in(ALUResultM),
         .readData_in(readDataM),
         .PCPlusImm_in(PCPlusImmM),
@@ -260,6 +270,7 @@ module diagv2_core(
         .PCPlus4_in(PCPlus4M),
         .resultSrc_out(resultSrcW),
         .regWrite_out(regWriteW),
+        .ecall_out(ecallW),
         .ALUResult_out(ALUResultW),
         .readData_out(readDataW),
         .PCPlusImm_out(PCPlusImmW),

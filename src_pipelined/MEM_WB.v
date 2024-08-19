@@ -6,6 +6,7 @@ module MEM_WB(
     input reset,
     input [`RsltSrcBusBits-1:0] resultSrc_in,
     input regWrite_in,
+    input ecall_in,
     input [`DataBusBits-1:0] ALUResult_in,
     input [`DataBusBits-1:0] readData_in,
     input [`DataBusBits-1:0] PCPlusImm_in,
@@ -14,6 +15,7 @@ module MEM_WB(
     input [`DataBusBits-1:0] PCPlus4_in,
     output reg [`RsltSrcBusBits-1:0] resultSrc_out,
     output reg regWrite_out,
+    output reg ecall_out,
     output reg [`DataBusBits-1:0] ALUResult_out,
     output reg [`DataBusBits-1:0] readData_out,
     output reg [`DataBusBits-1:0] PCPlusImm_out,
@@ -26,6 +28,7 @@ module MEM_WB(
         if(reset) begin
             resultSrc_out <= `RsltSrcBusBits'b0;
             regWrite_out <= 1'b0;
+            ecall_out <= 1'b0;
             ALUResult_out <= `DataZero;
             readData_out <= `DataZero;
             PCPlusImm_out <= `DataZero;
@@ -36,6 +39,7 @@ module MEM_WB(
         else begin
             resultSrc_out <= resultSrc_in;
             regWrite_out <= regWrite_in;
+            ecall_out <= ecall_in;
             ALUResult_out <= ALUResult_in;
             readData_out <= readData_in;
             PCPlusImm_out <= PCPlusImm_in;

@@ -8,6 +8,7 @@ module EX_MEM(
     input [`MemTypeBusBits-1:0] memType_in,
     input [`RsltSrcBusBits-1:0] resultSrc_in,
     input regWrite_in,
+    input ecall_in,
     input [`DataBusBits-1:0] ALUResult_in,
     input [`DataBusBits-1:0] writeData_in,
     input [`DataBusBits-1:0] PCPlusImm_in,
@@ -18,6 +19,7 @@ module EX_MEM(
     output reg [`MemTypeBusBits-1:0] memType_out,
     output reg [`RsltSrcBusBits-1:0] resultSrc_out,
     output reg regWrite_out,
+    output reg ecall_out,
     output reg [`DataBusBits-1:0] ALUResult_out,
     output reg [`DataBusBits-1:0] writeData_out,
     output reg [`DataBusBits-1:0] PCPlusImm_out,
@@ -32,6 +34,7 @@ module EX_MEM(
             memType_out <= `MemTypeBusBits'b0;
             resultSrc_out <= `RsltSrcBusBits'b0;
             regWrite_out <= 1'b0;
+            ecall_out <= 1'b0;
             ALUResult_out <= `DataZero;
             writeData_out <= `DataZero;
             PCPlusImm_out <= `DataZero;
@@ -44,6 +47,7 @@ module EX_MEM(
             memType_out <= memType_in;
             resultSrc_out <= resultSrc_in;
             regWrite_out <= regWrite_in;
+            ecall_out <= ecall_in;
             ALUResult_out <= ALUResult_in;
             writeData_out <= writeData_in;
             PCPlusImm_out <= PCPlusImm_in;

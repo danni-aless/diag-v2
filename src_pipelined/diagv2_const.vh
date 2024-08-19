@@ -33,6 +33,7 @@
 `define OP          7'b0110011
 `define OP_IMM_32   7'b0011011
 `define OP_32       7'b0111011
+`define ECALL       7'b1110011
 
 // Funct3
 `define Funct3BEQ   3'b000

@@ -11,7 +11,8 @@ module control_unit(
         output memWrite,
         output [`MemTypeBusBits-1:0] memType,
         output [`RsltSrcBusBits-1:0] resultSrc,
-        output regWrite
+        output regWrite,
+        output ecall
     );
     
     reg [11:0] signals; // signals reg for better assignment
@@ -19,6 +20,7 @@ module control_unit(
     assign {regWrite, immSrc, ALUSrc, memWrite, resultSrc, branch, jal, jalr} = signals;
     assign ALU32 = (op == `OP_IMM_32) | (op == `OP_32);
     assign memType = funct3;
+    assign ecall = op == `ECALL;
     
     always @(*) begin
         case(op) // for signals reg

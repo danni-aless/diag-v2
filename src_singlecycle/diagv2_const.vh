@@ -3,7 +3,7 @@
 
 `define DataBusBits     64
 `define InstrBusBits    32
-`define RegAddrBits	     5
+`define RegAddrBits	 5
 
 `define DataZero    64'b0
 `define DataZero32  32'b0

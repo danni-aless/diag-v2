@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="28.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="640.001 ns"></ZoomEndTime>
-      <Cursor1Time time="130.000 ns"></Cursor1Time>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="310.501 ns"></ZoomEndTime>
+      <Cursor1Time time="60.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="152"></NameColumnWidth>
-      <ValueColumnWidth column_width="80"></ValueColumnWidth>
+      <NameColumnWidth column_width="135"></NameColumnWidth>
+      <ValueColumnWidth column_width="72"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="23" />
+   <WVObjectSize size="27" />
    <wvobject fp_name="/diagv2_tb/CLK" type="logic">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -27,6 +27,18 @@
    <wvobject fp_name="/diagv2_tb/RESET" type="logic">
       <obj_property name="ElementShortName">RESET</obj_property>
       <obj_property name="ObjectShortName">RESET</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/HALT" type="logic">
+      <obj_property name="ElementShortName">HALT</obj_property>
+      <obj_property name="ObjectShortName">HALT</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/ecall" type="logic">
+      <obj_property name="ElementShortName">ecall</obj_property>
+      <obj_property name="ObjectShortName">ecall</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/statusCode" type="array">
+      <obj_property name="ElementShortName">statusCode[63:0]</obj_property>
+      <obj_property name="ObjectShortName">statusCode[63:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/diagv2_tb/top/core/PCSrc" type="logic">
       <obj_property name="ElementShortName">PCSrc</obj_property>
@@ -108,8 +120,12 @@
       <obj_property name="ElementShortName">flushE</obj_property>
       <obj_property name="ObjectShortName">flushE</obj_property>
    </wvobject>
-   <wvobject fp_name="/diagv2_tb/top/core/hu/validPrediction" type="logic">
-      <obj_property name="ElementShortName">validPrediction</obj_property>
-      <obj_property name="ObjectShortName">validPrediction</obj_property>
+   <wvobject fp_name="/diagv2_tb/top/core/reg_file/registers[10]" type="array">
+      <obj_property name="ElementShortName">[10][63:0]</obj_property>
+      <obj_property name="ObjectShortName">[10][63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/reg_file/registers[17]" type="array">
+      <obj_property name="ElementShortName">[17][63:0]</obj_property>
+      <obj_property name="ObjectShortName">[17][63:0]</obj_property>
    </wvobject>
 </wave_config>

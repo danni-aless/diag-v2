@@ -52,7 +52,7 @@ module branch_predictor_gshare(
             end
         end
         else if(we) begin
-            GHR <= {GHR[N-2:0], takenUpdate};
+            GHR <= {GHR[N-2:0], takenUpdate}; // GHR update (shift)
             if(takenUpdate)
                 BTB[BTBIndexUpdate] <= {PCTagUpdate, targetUpdate}; // BTB line update
             case(PHT[PHTIndexUpdate]) // 2-bit saturation counter update
