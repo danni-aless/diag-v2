@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="310.501 ns"></ZoomEndTime>
-      <Cursor1Time time="60.000 ns"></Cursor1Time>
+      <ZoomStartTime time="254.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="569.501 ns"></ZoomEndTime>
+      <Cursor1Time time="430.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="135"></NameColumnWidth>
+      <NameColumnWidth column_width="125"></NameColumnWidth>
       <ValueColumnWidth column_width="72"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="27" />
+   <WVObjectSize size="29" />
    <wvobject fp_name="/diagv2_tb/CLK" type="logic">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -47,6 +47,10 @@
    <wvobject fp_name="/diagv2_tb/top/core/pc_reg/PC" type="array">
       <obj_property name="ElementShortName">PC[63:0]</obj_property>
       <obj_property name="ObjectShortName">PC[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/immExtD" type="array">
+      <obj_property name="ElementShortName">immExtD[63:0]</obj_property>
+      <obj_property name="ObjectShortName">immExtD[63:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/diagv2_tb/top/core/alu/A" type="array">
       <obj_property name="ElementShortName">A[63:0]</obj_property>
@@ -120,12 +124,16 @@
       <obj_property name="ElementShortName">flushE</obj_property>
       <obj_property name="ObjectShortName">flushE</obj_property>
    </wvobject>
-   <wvobject fp_name="/diagv2_tb/top/core/reg_file/registers[10]" type="array">
-      <obj_property name="ElementShortName">[10][63:0]</obj_property>
-      <obj_property name="ObjectShortName">[10][63:0]</obj_property>
+   <wvobject fp_name="/diagv2_tb/top/core/reg_file/registers[2]" type="array">
+      <obj_property name="ElementShortName">[2][63:0]</obj_property>
+      <obj_property name="ObjectShortName">[2][63:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/diagv2_tb/top/core/reg_file/registers[17]" type="array">
-      <obj_property name="ElementShortName">[17][63:0]</obj_property>
-      <obj_property name="ObjectShortName">[17][63:0]</obj_property>
+   <wvobject fp_name="/diagv2_tb/top/core/reg_file/registers[14]" type="array">
+      <obj_property name="ElementShortName">[14][63:0]</obj_property>
+      <obj_property name="ObjectShortName">[14][63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/core/reg_file/registers[7]" type="array">
+      <obj_property name="ElementShortName">[7][63:0]</obj_property>
+      <obj_property name="ObjectShortName">[7][63:0]</obj_property>
    </wvobject>
 </wave_config>

@@ -57,6 +57,8 @@ module diagv2_core(
     wire [`DataBusBits-1:0] PCPlusImmE, PCPlusImmM, PCPlusImmW;
     wire branchOp, taken;
     
+    wire [`DataBusBits-1:0] forwardingMtoE;
+    
     wire [`DataBusBits-1:0] readDataW;
     
     // FETCH
@@ -71,11 +73,16 @@ module diagv2_core(
     assign writeRegD = instrD[11:7];
     
     // EXECUTE
-    assign srcA = forwardAE[1] ? ALUResultM :
+    assign srcA = forwardAE[1] ? forwardingMtoE :
                   forwardAE[0] ? writeDataReg : readData1E;
-    assign writeDataE = forwardBE[1] ? ALUResultM :
+    assign writeDataE = forwardBE[1] ? forwardingMtoE :
                         forwardBE[0] ? writeDataReg : readData2E;
     assign srcB = ALUSrcE ? immExtE : writeDataE;
+    
+    // MEMORY
+    assign forwardingMtoE = resultSrcM[2] ? PCPlusImmM : 
+                            resultSrcM[1] ? (resultSrcM[0] ? immExtM : PCPlus4M) 
+                                          : (resultSrcM[0] ? `DataZero : ALUResultM);
     
     // WRITEBACK
     assign writeDataReg = resultSrcW[2] ? PCPlusImmW : 
