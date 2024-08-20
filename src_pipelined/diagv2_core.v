@@ -90,7 +90,7 @@ module diagv2_core(
                                         : (resultSrcW[0] ? readDataW : ALUResultW);
     
     always @(posedge clk) begin
-        $display("Instruction %h: %h", PCF, instrF);
+        //$display("Instruction %h: %h", PCF, instrF);
     end
     
     pc pc_reg(

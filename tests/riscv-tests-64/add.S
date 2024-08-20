@@ -1,363 +1,85 @@
-.text
- .globl _start
- _start: nop
+# See LICENSE for license details.
+
+#*****************************************************************************
+# add.S
+#-----------------------------------------------------------------------------
+#
+# Test add instruction.
+#
+
+#include "riscv_test.h"
+#include "test_macros.h"
+
+RVTEST_RV64U
+RVTEST_CODE_BEGIN
 
   #-------------------------------------------------------------
   # Arithmetic tests
   #-------------------------------------------------------------
 
-  test_2: li x1, 0x00000000
- li x2, 0x00000000
- add x14, x1, x2
- li x7, 0x00000000
- li gp, 2
- bne x14, x7, fail
+  TEST_RR_OP( 2,  add, 0x00000000, 0x00000000, 0x00000000 );
+  TEST_RR_OP( 3,  add, 0x00000002, 0x00000001, 0x00000001 );
+  TEST_RR_OP( 4,  add, 0x0000000a, 0x00000003, 0x00000007 );
 
-  test_3: li x1, 0x00000001
- li x2, 0x00000001
- add x14, x1, x2
- li x7, 0x00000002
- li gp, 3
- bne x14, x7, fail
+  TEST_RR_OP( 5,  add, 0xffffffffffff8000, 0x0000000000000000, 0xffffffffffff8000 );
+  TEST_RR_OP( 6,  add, 0xffffffff80000000, 0xffffffff80000000, 0x00000000 );
+  TEST_RR_OP( 7,  add, 0xffffffff7fff8000, 0xffffffff80000000, 0xffffffffffff8000 );
 
-  test_4: li x1, 0x00000003
- li x2, 0x00000007
- add x14, x1, x2
- li x7, 0x0000000a
- li gp, 4
- bne x14, x7, fail
+  TEST_RR_OP( 8,  add, 0x0000000000007fff, 0x0000000000000000, 0x0000000000007fff );
+  TEST_RR_OP( 9,  add, 0x000000007fffffff, 0x000000007fffffff, 0x0000000000000000 );
+  TEST_RR_OP( 10, add, 0x0000000080007ffe, 0x000000007fffffff, 0x0000000000007fff );
 
+  TEST_RR_OP( 11, add, 0xffffffff80007fff, 0xffffffff80000000, 0x0000000000007fff );
+  TEST_RR_OP( 12, add, 0x000000007fff7fff, 0x000000007fffffff, 0xffffffffffff8000 );
 
-  test_5: li x1, 0x0000000000000000
- li x2, 0xffffffffffff8000
- add x14, x1, x2
- li x7, 0xffffffffffff8000
- li gp, 5
- bne x14, x7, fail
+  TEST_RR_OP( 13, add, 0xffffffffffffffff, 0x0000000000000000, 0xffffffffffffffff );
+  TEST_RR_OP( 14, add, 0x0000000000000000, 0xffffffffffffffff, 0x0000000000000001 );
+  TEST_RR_OP( 15, add, 0xfffffffffffffffe, 0xffffffffffffffff, 0xffffffffffffffff );
 
-  test_6: li x1, 0xffffffff80000000
- li x2, 0x00000000
- add x14, x1, x2
- li x7, 0xffffffff80000000
- li gp, 6
- bne x14, x7, fail
-
-  test_7: li x1, 0xffffffff80000000
- li x2, 0xffffffffffff8000
- add x14, x1, x2
- li x7, 0xffffffff7fff8000
- li gp, 7
- bne x14, x7, fail
-
-
-  test_8: li x1, 0x0000000000000000
- li x2, 0x0000000000007fff
- add x14, x1, x2
- li x7, 0x0000000000007fff
- li gp, 8
- bne x14, x7, fail
-
-  test_9: li x1, 0x000000007fffffff
- li x2, 0x0000000000000000
- add x14, x1, x2
- li x7, 0x000000007fffffff
- li gp, 9
- bne x14, x7, fail
-
-  test_10: li x1, 0x000000007fffffff
- li x2, 0x0000000000007fff
- add x14, x1, x2
- li x7, 0x0000000080007ffe
- li gp, 10
- bne x14, x7, fail
-
-
-  test_11: li x1, 0xffffffff80000000
- li x2, 0x0000000000007fff
- add x14, x1, x2
- li x7, 0xffffffff80007fff
- li gp, 11
- bne x14, x7, fail
-
-  test_12: li x1, 0x000000007fffffff
- li x2, 0xffffffffffff8000
- add x14, x1, x2
- li x7, 0x000000007fff7fff
- li gp, 12
- bne x14, x7, fail
-
-
-  test_13: li x1, 0x0000000000000000
- li x2, 0xffffffffffffffff
- add x14, x1, x2
- li x7, 0xffffffffffffffff
- li gp, 13
- bne x14, x7, fail
-
-  test_14: li x1, 0xffffffffffffffff
- li x2, 0x0000000000000001
- add x14, x1, x2
- li x7, 0x0000000000000000
- li gp, 14
- bne x14, x7, fail
-
-  test_15: li x1, 0xffffffffffffffff
- li x2, 0xffffffffffffffff
- add x14, x1, x2
- li x7, 0xfffffffffffffffe
- li gp, 15
- bne x14, x7, fail
-
-
-  test_16: li x1, 0x0000000000000001
- li x2, 0x000000007fffffff
- add x14, x1, x2
- li x7, 0x0000000080000000
- li gp, 16
- bne x14, x7, fail
-
+  TEST_RR_OP( 16, add, 0x0000000080000000, 0x0000000000000001, 0x000000007fffffff );
 
   #-------------------------------------------------------------
   # Source/Destination tests
   #-------------------------------------------------------------
 
-  test_17: li x1, 13
- li x2, 11
- add x1, x1, x2
- li x7, 24
- li gp, 17
- bne x1, x7, fail
-
-  test_18: li x1, 14
- li x2, 11
- add x2, x1, x2
- li x7, 25
- li gp, 18
- bne x2, x7, fail
-
-  test_19: li x1, 13
- add x1, x1, x1
- li x7, 26
- li gp, 19
- bne x1, x7, fail
-
+  TEST_RR_SRC1_EQ_DEST( 17, add, 24, 13, 11 );
+  TEST_RR_SRC2_EQ_DEST( 18, add, 25, 14, 11 );
+  TEST_RR_SRC12_EQ_DEST( 19, add, 26, 13 );
 
   #-------------------------------------------------------------
   # Bypassing tests
   #-------------------------------------------------------------
 
-  test_20: li x4, 0
- li x1, 13
- li x2, 11
- add x14, x1, x2
- addi x6, x14, 0
- li x7, 24
- li gp, 20
- bne x6, x7, fail
+  TEST_RR_DEST_BYPASS( 20, 0, add, 24, 13, 11 );
+  TEST_RR_DEST_BYPASS( 21, 1, add, 25, 14, 11 );
+  TEST_RR_DEST_BYPASS( 22, 2, add, 26, 15, 11 );
 
-  test_21: li x4, 0
- li x1, 14
- li x2, 11
- add x14, x1, x2
- nop
- addi x6, x14, 0
- li x7, 25
- li gp, 21
- bne x6, x7, fail
+  TEST_RR_SRC12_BYPASS( 23, 0, 0, add, 24, 13, 11 );
+  TEST_RR_SRC12_BYPASS( 24, 0, 1, add, 25, 14, 11 );
+  TEST_RR_SRC12_BYPASS( 25, 0, 2, add, 26, 15, 11 );
+  TEST_RR_SRC12_BYPASS( 26, 1, 0, add, 24, 13, 11 );
+  TEST_RR_SRC12_BYPASS( 27, 1, 1, add, 25, 14, 11 );
+  TEST_RR_SRC12_BYPASS( 28, 2, 0, add, 26, 15, 11 );
 
-  test_22: li x4, 0
- li x1, 15
- li x2, 11
- add x14, x1, x2
- nop
- nop
- addi x6, x14, 0
- li x7, 26
- li gp, 22
- bne x6, x7, fail
+  TEST_RR_SRC21_BYPASS( 29, 0, 0, add, 24, 13, 11 );
+  TEST_RR_SRC21_BYPASS( 30, 0, 1, add, 25, 14, 11 );
+  TEST_RR_SRC21_BYPASS( 31, 0, 2, add, 26, 15, 11 );
+  TEST_RR_SRC21_BYPASS( 32, 1, 0, add, 24, 13, 11 );
+  TEST_RR_SRC21_BYPASS( 33, 1, 1, add, 25, 14, 11 );
+  TEST_RR_SRC21_BYPASS( 34, 2, 0, add, 26, 15, 11 );
 
+  TEST_RR_ZEROSRC1( 35, add, 15, 15 );
+  TEST_RR_ZEROSRC2( 36, add, 32, 32 );
+  TEST_RR_ZEROSRC12( 37, add, 0 );
+  TEST_RR_ZERODEST( 38, add, 16, 30 );
 
-  test_23: li x4, 0
- li x1, 13
- li x2, 11
- add x14, x1, x2
- addi x4, x4, 1
- li x5, 2
- li x7, 24
- li gp, 23
- bne x14, x7, fail
+  TEST_PASSFAIL
 
-  test_24: li x4, 0
- li x1, 14
- li x2, 11
- nop
- add x14, x1, x2
- addi x4, x4, 1
- li x5, 2
- li x7, 25
- li gp, 24
- bne x14, x7, fail
-
-  test_25: li x4, 0
- li x1, 15
- li x2, 11
- nop
- nop
- add x14, x1, x2
- addi x4, x4, 1
- li x5, 2
- li x7, 26
- li gp, 25
- bne x14, x7, fail
-
-  test_26: li x4, 0
- li x1, 13
- nop
- li x2, 11
- add x14, x1, x2
- addi x4, x4, 1
- li x5, 2
- li x7, 24
- li gp, 26
- bne x14, x7, fail
-
-  test_27: li x4, 0
- li x1, 14
- nop
- li x2, 11
- nop
- add x14, x1, x2
- addi x4, x4, 1
- li x5, 2
- li x7, 25
- li gp, 27
- bne x14, x7, fail
-
-  test_28: li x4, 0
- li x1, 15
- nop
- nop
- li x2, 11
- add x14, x1, x2
- addi x4, x4, 1
- li x5, 2
- li x7, 26
- li gp, 28
- bne x14, x7, fail
-
-
-  test_29: li x4, 0
- li x2, 11
- li x1, 13
- add x14, x1, x2
- addi x4, x4, 1
- li x5, 2
- li x7, 24
- li gp, 29
- bne x14, x7, fail
-
-  test_30: li x4, 0
- li x2, 11
- li x1, 14
- nop
- add x14, x1, x2
- addi x4, x4, 1
- li x5, 2
- li x7, 25
- li gp, 30
- bne x14, x7, fail
-
-  test_31: li x4, 0
- li x2, 11
- li x1, 15
- nop
- nop
- add x14, x1, x2
- addi x4, x4, 1
- li x5, 2
- li x7, 26
- li gp, 31
- bne x14, x7, fail
-
-  test_32: li x4, 0
- li x2, 11
- nop
- li x1, 13
- add x14, x1, x2
- addi x4, x4, 1
- li x5, 2
- li x7, 24
- li gp, 32
- bne x14, x7, fail
-
-  test_33: li x4, 0
- li x2, 11
- nop
- li x1, 14
- nop
- add x14, x1, x2
- addi x4, x4, 1
- li x5, 2
- li x7, 25
- li gp, 33
- bne x14, x7, fail
-
-  test_34: li x4, 0
- li x2, 11
- nop
- nop
- li x1, 15
- add x14, x1, x2
- addi x4, x4, 1
- li x5, 2
- li x7, 26
- li gp, 34
- bne x14, x7, fail
-
-
-  test_35: li x1, 15
- add x2, x0, x1
- li x7, 15
- li gp, 35
- bne x2, x7, fail
-
-  test_36: li x1, 32
- add x2, x1, x0
- li x7, 32
- li gp, 36
- bne x2, x7, fail
-
-  test_37: add x1, x0, x0
- li x7, 0
- li gp, 37
- bne x1, x7, fail
-
-  test_38: li x1, 16
- li x2, 30
- add x0, x1, x2
- li x7, 0
- li gp, 38
- bne x0, x7, fail
-
-
-  bne x0, gp, pass
- fail: li a0, 0
- li a7, 93
- ecall
- pass: li a0, 42
- li a7, 93
- ecall
-
-
+RVTEST_CODE_END
 
   .data
- .data 
- .align 4
- .global begin_signature
- begin_signature:
+RVTEST_DATA_BEGIN
 
- 
+  TEST_DATA
 
-.align 4
- .global end_signature
- end_signature:
+RVTEST_DATA_END

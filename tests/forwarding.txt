@@ -3,10 +3,8 @@ addi x2, x1, 0x1
 add  x3, x1, x2
 sub x4, x3, x2
 lui x5, 0xffff0
-nop
 addi x6, x5, 0x1
 auipc x7, 0xffff0
-nop
 addi x8, x7, 0x1
 addi a0, x0, 42
 addi a7, x0, 93
