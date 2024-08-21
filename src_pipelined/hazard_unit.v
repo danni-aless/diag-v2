@@ -49,7 +49,7 @@ module hazard_unit(
     always @(*) begin
         reg1Used = opD==`JALR | opD==`BRANCH | opD==`LOAD | opD==`STORE | opD==`OP_IMM | opD==`OP | opD==`OP_IMM_32 | opD==`OP_32;
         reg2Used = opD==`BRANCH | opD==`STORE | opD==`OP | opD==`OP_32;
-        loadStall = (resultSrcE==`RsltSrcLOAD) & ((readRegister1D==writeRegE & readRegister1D!=`RegZero & reg1Used) 
+        loadStall = (resultSrcE===`RsltSrcLOAD) & ((readRegister1D==writeRegE & readRegister1D!=`RegZero & reg1Used) 
                                                 | (readRegister2D==writeRegE & readRegister2D!=`RegZero & reg2Used));
     end
     

@@ -7,49 +7,7 @@ module diagv2_tb();
     wire ecall;
     wire [`DataBusBits-1:0] statusCode; // x10 register
     
-    reg [79:0] riscv_tests[0:38] = {
-        "add.mem",
-        "addi.mem",
-        "addiw.mem",
-        "addw.mem",
-        "and.mem",
-        "andi.mem",
-        "auipc.mem",
-        "beq.mem",
-        "bge.mem",
-        "bgeu.mem",
-        "blt.mem",
-        "bltu.mem",
-        "bne.mem",
-        "jal.mem",
-        "jalr.mem",
-        "lui.mem",
-        "or.mem",
-        "ori.mem",
-        "simple.mem",
-        "sll.mem",
-        "slli.mem",
-        "slliw.mem",
-        "sllw.mem",
-        "slt.mem",
-        "slti.mem",
-        "sltiu.mem",
-        "sltu.mem",
-        "sra.mem",
-        "srai.mem",
-        "sraiw.mem",
-        "sraw.mem",
-        "srl.mem",
-        "srli.mem",
-        "srliw.mem",
-        "srlw.mem",
-        "sub.mem",
-        "subw.mem",
-        "xor.mem",
-        "xori.mem"
-    };
-    
-    /*reg [79:0] riscv_tests[0:49] = {
+    reg [79:0] riscv_tests[0:49] = {
         "add.mem",
         "addi.mem",
         "addiw.mem",
@@ -100,7 +58,60 @@ module diagv2_tb();
         "sw.mem",
         "xor.mem",
         "xori.mem"
-    };*/
+    };
+    
+    reg [119:0] riscv_tests_data[0:49] = {
+        "add_data.mem",
+        "addi_data.mem",
+        "addiw_data.mem",
+        "addw_data.mem",
+        "and_data.mem",
+        "andi_data.mem",
+        "auipc_data.mem",
+        "beq_data.mem",
+        "bge_data.mem",
+        "bgeu_data.mem",
+        "blt_data.mem",
+        "bltu_data.mem",
+        "bne_data.mem",
+        "jal_data.mem",
+        "jalr_data.mem",
+        "lb_data.mem",
+        "lbu_data.mem",
+        "ld_data.mem",
+        "lh_data.mem",
+        "lhu_data.mem",
+        "lui_data.mem",
+        "lw_data.mem",
+        "lwu_data.mem",
+        "or_data.mem",
+        "ori_data.mem",
+        "sb_data.mem",
+        "sd_data.mem",
+        "sh_data.mem",
+        "simple_data.mem",
+        "sll_data.mem",
+        "slli_data.mem",
+        "slliw_data.mem",
+        "sllw_data.mem",
+        "slt_data.mem",
+        "slti_data.mem",
+        "sltiu_data.mem",
+        "sltu_data.mem",
+        "sra_data.mem",
+        "srai_data.mem",
+        "sraiw_data.mem",
+        "sraw_data.mem",
+        "srl_data.mem",
+        "srli_data.mem",
+        "srliw_data.mem",
+        "srlw_data.mem",
+        "sub_data.mem",
+        "subw_data.mem",
+        "sw_data.mem",
+        "xor_data.mem",
+        "xori_data.mem"
+    };
     
     integer i, passed_tests, failed_tests;
 
@@ -116,11 +127,11 @@ module diagv2_tb();
         passed_tests = 0;
         failed_tests = 0;
         $readmemh(riscv_tests[i], top.imem.imem);
-        $readmemh(riscv_tests[i], top.dmem.dmem);
+        $readmemh(riscv_tests_data[i], top.dmem.dmem);
         CLK <= 1'b0;
         RESET <= 1'b1;
         HALT <= 1'b0;
-        #20;
+        #25;
         RESET <= 1'b0;
     end
     
@@ -137,12 +148,12 @@ module diagv2_tb();
             else
                 failed_tests = failed_tests+1;
             i = i+1;
-            if(i<39) begin
+            if(i<50) begin
                 $readmemh(riscv_tests[i], top.imem.imem);
-                $readmemh(riscv_tests[i], top.dmem.dmem);
+                $readmemh(riscv_tests_data[i], top.dmem.dmem);
                 RESET <= 1'b1;
                 HALT <= 1'b0;
-                #20;
+                #25;
                 RESET <= 1'b0;
             end
             else

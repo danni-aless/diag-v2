@@ -11,13 +11,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="133,040.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="133,298.001 ns"></ZoomEndTime>
-      <Cursor1Time time="133,150.000 ns"></Cursor1Time>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="582.001 ns"></ZoomEndTime>
+      <Cursor1Time time="490.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="120"></NameColumnWidth>
-      <ValueColumnWidth column_width="72"></ValueColumnWidth>
+      <NameColumnWidth column_width="154"></NameColumnWidth>
+      <ValueColumnWidth column_width="92"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="27" />
    <wvobject fp_name="/diagv2_tb/CLK" type="logic">
