@@ -10,7 +10,9 @@ module diagv2_core(
     output [`DataBusBits-1:0] ALUResult,
     output [`DataBusBits-1:0] writeData,
     output memWrite, // signal for dmem
-    output [`MemTypeBusBits-1:0] memType // signal for dmem
+    output [`MemTypeBusBits-1:0] memType, // signal for dmem
+    output ecall, // signal for testing/debugging
+    output [`DataBusBits-1:0] statusCode // x10 register
     );
     
     // signals
@@ -20,7 +22,7 @@ module diagv2_core(
     wire [`AluCntrBusBits-1:0] ALUControl;
     wire [`RsltSrcBusBits-1:0] resultSrc;
     
-    wire [`DataBusBits-1:0] PCNext, PCPlus4, PCTarget;
+    wire [`DataBusBits-1:0] PCNext, PCPlus4, PCPlusImm;
     
     wire [`OpBusBits-1:0] op;
     wire [`Funct3BusBits-1:0] funct3;
@@ -34,7 +36,7 @@ module diagv2_core(
     wire [`DataBusBits-1:0] srcA, srcB;
     wire zero, lt, ltu; // ALU signals
     
-    assign PCNext = PCSrc[1] ? ALUResult : (PCSrc[0] ? PCTarget : PCPlus4);
+    assign PCNext = PCSrc[1] ? ALUResult : (PCSrc[0] ? PCPlusImm : PCPlus4);
     
     assign op = instr[6:0];
     assign funct3 = instr[14:12];
@@ -43,7 +45,7 @@ module diagv2_core(
     assign readRegister1 = instr[19:15];
     assign readRegister2 = instr[24:20];
     assign writeRegister = instr[11:7];
-    assign writeDataReg  = resultSrc[2] ? PCTarget :
+    assign writeDataReg  = resultSrc[2] ? PCPlusImm :
                            resultSrc[1] ? (resultSrc[0] ? immExt : PCPlus4) 
                                         : (resultSrc[0] ? readData : ALUResult);
     assign srcA = readData1;
@@ -52,10 +54,7 @@ module diagv2_core(
     assign writeData = readData2;
     
     always @(posedge clk) begin
-        $display("Instruction %h: %h", PC, instr);
-        //$display("reg %h: %h", readRegister1, readData1);
-        //$display("reg %h: %h", readRegister2, readData2);
-        //$display("reg %h: %h", writeRegister, writeDataReg);
+        //$display("Instruction %h: %h", PCF, instrF);
     end
 
     pc pc_reg(
@@ -86,7 +85,8 @@ module diagv2_core(
         .ALU32(ALU32),
         .memWrite(memWrite),
         .memType(memType),
-        .resultSrc(resultSrc)
+        .resultSrc(resultSrc),
+        .ecall(ecall)
     );
     
     register_file reg_file(
@@ -98,7 +98,8 @@ module diagv2_core(
         .writeRegister(writeRegister),
         .writeData(writeDataReg),
         .readData1(readData1),
-        .readData2(readData2)
+        .readData2(readData2),
+        .statusCode(statusCode)
     );
     
     imm_generator imm_gen(
@@ -121,7 +122,7 @@ module diagv2_core(
     adder branch_adder(
         .in_1(PC),
         .in_2(immExt),
-        .out(PCTarget)
+        .out(PCPlusImm)
     );
     
 endmodule

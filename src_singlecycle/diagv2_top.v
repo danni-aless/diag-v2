@@ -3,7 +3,9 @@
 
 module diagv2_top(
     input clk,
-    input reset
+    input reset,
+    output ecall, // signal for testing/debugging
+    output [`DataBusBits-1:0] statusCode // x10 register
     );
 
     wire [`InstrBusBits-1:0] instruction;
@@ -23,7 +25,9 @@ module diagv2_top(
         .ALUResult(DataAddr),
         .writeData(writeData),
         .memWrite(memWrite),
-        .memType(memType)
+        .memType(memType),
+        .ecall(ecall),
+        .statusCode(statusCode)
     );
     
     instr_mem imem(

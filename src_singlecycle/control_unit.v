@@ -11,7 +11,8 @@ module control_unit(
         output [`ImmSrcBusBits-1:0] immSrc,
         output reg [`AluCntrBusBits-1:0] ALUControl,
         output [`MemTypeBusBits-1:0] memType,
-        output [`RsltSrcBusBits-1:0] resultSrc
+        output [`RsltSrcBusBits-1:0] resultSrc,
+        output ecall
     );
     
     // internal signals
@@ -25,6 +26,7 @@ module control_unit(
     assign PCSrc[1] = jalr;
     assign ALU32 = (op == `OP_IMM_32) | (op == `OP_32);
     assign memType = funct3;
+    assign ecall = op == `ECALL;
     
     always @(*) begin
         case(op) // for signals reg
