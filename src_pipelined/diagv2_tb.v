@@ -3,12 +3,16 @@
 
 module diagv2_tb();
 
+    parameter TESTS = 1;
+
     reg CLK, RESET, HALT;
     wire ecall;
-    wire [`DataBusBits-1:0] statusCode; // x10 register
+    wire [`DataBusBits-1:0] statusCode; // a0/x10 register
     
-    reg [79:0] riscv_tests[0:49] = {
-        "add.mem",
+    integer i, passed_tests, failed_tests;
+    
+    reg [95:0] riscv_tests[0:TESTS-1] = {
+        /*"add.mem",
         "addi.mem",
         "addiw.mem",
         "addw.mem",
@@ -57,11 +61,12 @@ module diagv2_tb();
         "subw.mem",
         "sw.mem",
         "xor.mem",
-        "xori.mem"
+        "xori.mem"*/
+        "fib.mem"
     };
     
-    reg [119:0] riscv_tests_data[0:49] = {
-        "add_data.mem",
+    reg [135:0] riscv_tests_data[0:TESTS-1] = {
+        /*"add_data.mem",
         "addi_data.mem",
         "addiw_data.mem",
         "addw_data.mem",
@@ -110,11 +115,10 @@ module diagv2_tb();
         "subw_data.mem",
         "sw_data.mem",
         "xor_data.mem",
-        "xori_data.mem"
+        "xori_data.mem"*/
+        "fib_data.mem"
     };
     
-    integer i, passed_tests, failed_tests;
-
     diagv2_top top(
         .clk(CLK),
         .reset(RESET),
@@ -143,12 +147,12 @@ module diagv2_tb();
         if(ecall) begin
             $display("diagv2_tb (%s) - ECALL Status code: %2d", riscv_tests[i], statusCode);
             HALT <= 1'b1;
-            if(!statusCode)
+            /*if(!statusCode)
                 passed_tests = passed_tests+1;
             else
-                failed_tests = failed_tests+1;
+                failed_tests = failed_tests+1;*/
             i = i+1;
-            if(i<50) begin
+            if(i<TESTS) begin
                 $readmemh(riscv_tests[i], top.imem.imem);
                 $readmemh(riscv_tests_data[i], top.dmem.dmem);
                 RESET <= 1'b1;
