@@ -6,12 +6,18 @@ module instr_mem(
         output [`InstrBusBits-1:0] instr
     );
     
-    reg [`InstrBusBits-1:0] imem[0:4095]; // maximum of 4096 32-bit instructions
+    parameter N = 14;
+    
+    reg [`InstrBusBits-1:0] imem[0:(1<<N)-1]; // maximum of 2^N 32-bit instructions
     
     assign instr = imem[addr[`DataBusBits-1:2]]; // word-aligned
     
-    /*initial begin
-        $readmemh("add.mem", imem); // write machine code to instruction memory
-    end*/
+    integer i;
+    
+    initial begin
+        for(i=0; i<(1<<N); i=i+1) begin
+            imem[i] <= `DataZero32;
+        end
+    end
     
 endmodule

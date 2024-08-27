@@ -3,11 +3,15 @@
 
 module diagv2_tb();
 
+    parameter TESTS = 50;
+
     reg CLK, RESET, HALT;
     wire ecall;
-    wire [`DataBusBits-1:0] statusCode; // x10 register
+    wire [`DataBusBits-1:0] statusCode; // a0/x10 register
     
-    reg [79:0] riscv_tests[0:49] = {
+    integer i, passed_tests, failed_tests;
+    
+    reg [79:0] riscv_tests[0:TESTS-1] = {
         "add.mem",
         "addi.mem",
         "addiw.mem",
@@ -60,7 +64,7 @@ module diagv2_tb();
         "xori.mem"
     };
     
-    reg [119:0] riscv_tests_data[0:49] = {
+    reg [119:0] riscv_tests_data[0:TESTS-1] = {
         "add_data.mem",
         "addi_data.mem",
         "addiw_data.mem",
@@ -113,8 +117,6 @@ module diagv2_tb();
         "xori_data.mem"
     };
     
-    integer i, passed_tests, failed_tests;
-
     diagv2_top top(
         .clk(CLK),
         .reset(RESET),
@@ -126,12 +128,13 @@ module diagv2_tb();
         i = 0;
         passed_tests = 0;
         failed_tests = 0;
-        $readmemh(riscv_tests[i], top.imem.imem);
-        $readmemh(riscv_tests_data[i], top.dmem.dmem);
         CLK <= 1'b0;
         RESET <= 1'b1;
         HALT <= 1'b0;
-        #25;
+        #10;
+        $readmemh(riscv_tests[i], top.imem.imem); // write machine code to instruction memory
+        $readmemh(riscv_tests_data[i], top.dmem.dmem); // write data to data memory
+        #15;
         RESET <= 1'b0;
     end
     
@@ -148,7 +151,7 @@ module diagv2_tb();
             else
                 failed_tests = failed_tests+1;
             i = i+1;
-            if(i<50) begin
+            if(i<TESTS) begin
                 $readmemh(riscv_tests[i], top.imem.imem);
                 $readmemh(riscv_tests_data[i], top.dmem.dmem);
                 RESET <= 1'b1;

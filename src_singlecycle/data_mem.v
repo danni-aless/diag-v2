@@ -10,7 +10,9 @@ module data_mem(
         output reg [`DataBusBits-1:0] rd
     );
     
-    reg [`DataBusBits-1:0] dmem[0:2047]; // RAM consists of 2048 64-bit lines
+    parameter N = 13;
+    
+    reg [`DataBusBits-1:0] dmem[0:(1<<N)-1]; // RAM consists of 2^N 64-bit lines
     
     always @(*) begin
         // TODO: misaligned access
@@ -99,8 +101,12 @@ module data_mem(
         end
     end
     
-    /*initial begin
-        $readmemh("add_data.mem", dmem);
-    end*/
+    integer i;
+    
+    initial begin
+        for(i=0; i<(1<<N); i=i+1) begin
+            dmem[i] <= `DataZero;
+        end
+    end
     
 endmodule

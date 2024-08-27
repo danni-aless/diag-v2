@@ -12,14 +12,14 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="1,137.001 ns"></ZoomEndTime>
-      <Cursor1Time time="130.000 ns"></Cursor1Time>
+      <ZoomEndTime time="630.001 ns"></ZoomEndTime>
+      <Cursor1Time time="0.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="152"></NameColumnWidth>
-      <ValueColumnWidth column_width="110"></ValueColumnWidth>
+      <ValueColumnWidth column_width="105"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="25" />
+   <WVObjectSize size="29" />
    <wvobject fp_name="/diagv2_tb/CLK" type="logic">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -36,13 +36,13 @@
       <obj_property name="ElementShortName">ecall</obj_property>
       <obj_property name="ObjectShortName">ecall</obj_property>
    </wvobject>
-   <wvobject fp_name="/diagv2_tb/i" type="array">
-      <obj_property name="ElementShortName">i[31:0]</obj_property>
-      <obj_property name="ObjectShortName">i[31:0]</obj_property>
-   </wvobject>
    <wvobject fp_name="/diagv2_tb/statusCode" type="array">
       <obj_property name="ElementShortName">statusCode[63:0]</obj_property>
       <obj_property name="ObjectShortName">statusCode[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/i" type="array">
+      <obj_property name="ElementShortName">i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">i[31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/diagv2_tb/top/core/PCSrc" type="array">
       <obj_property name="ElementShortName">PCSrc[1:0]</obj_property>
@@ -119,5 +119,21 @@
    <wvobject fp_name="/diagv2_tb/top/core/reg_file/we" type="logic">
       <obj_property name="ElementShortName">we</obj_property>
       <obj_property name="ObjectShortName">we</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/dmem/memType" type="array">
+      <obj_property name="ElementShortName">memType[2:0]</obj_property>
+      <obj_property name="ObjectShortName">memType[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/dmem/addr" type="array">
+      <obj_property name="ElementShortName">addr[63:0]</obj_property>
+      <obj_property name="ObjectShortName">addr[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/dmem/wd" type="array">
+      <obj_property name="ElementShortName">wd[63:0]</obj_property>
+      <obj_property name="ObjectShortName">wd[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb/top/dmem/rd" type="array">
+      <obj_property name="ElementShortName">rd[63:0]</obj_property>
+      <obj_property name="ObjectShortName">rd[63:0]</obj_property>
    </wvobject>
 </wave_config>
