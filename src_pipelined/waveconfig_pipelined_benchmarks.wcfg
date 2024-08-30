@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="diagv2_tb_benchmarks_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="diagv2_tb_benchmarks" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000000 us"></ZoomStartTime>
+      <ZoomEndTime time="3.587262 us"></ZoomEndTime>
+      <Cursor1Time time="201.490000 us"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="134"></NameColumnWidth>
+      <ValueColumnWidth column_width="92"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="34" />
+   <wvobject fp_name="/diagv2_tb_benchmarks/CLK" type="logic">
+      <obj_property name="ElementShortName">CLK</obj_property>
+      <obj_property name="ObjectShortName">CLK</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/RESET" type="logic">
+      <obj_property name="ElementShortName">RESET</obj_property>
+      <obj_property name="ObjectShortName">RESET</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/HALT" type="logic">
+      <obj_property name="ElementShortName">HALT</obj_property>
+      <obj_property name="ObjectShortName">HALT</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/ecall" type="logic">
+      <obj_property name="ElementShortName">ecall</obj_property>
+      <obj_property name="ObjectShortName">ecall</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/statusCode" type="array">
+      <obj_property name="ElementShortName">statusCode[63:0]</obj_property>
+      <obj_property name="ObjectShortName">statusCode[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/i" type="array">
+      <obj_property name="ElementShortName">i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">i[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/PCSrc" type="logic">
+      <obj_property name="ElementShortName">PCSrc</obj_property>
+      <obj_property name="ObjectShortName">PCSrc</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/pc_reg/PC" type="array">
+      <obj_property name="ElementShortName">PC[63:0]</obj_property>
+      <obj_property name="ObjectShortName">PC[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/immExtD" type="array">
+      <obj_property name="ElementShortName">immExtD[63:0]</obj_property>
+      <obj_property name="ObjectShortName">immExtD[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/forwardAE" type="array">
+      <obj_property name="ElementShortName">forwardAE[1:0]</obj_property>
+      <obj_property name="ObjectShortName">forwardAE[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/alu/A" type="array">
+      <obj_property name="ElementShortName">A[63:0]</obj_property>
+      <obj_property name="ObjectShortName">A[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/forwardBE" type="array">
+      <obj_property name="ElementShortName">forwardBE[1:0]</obj_property>
+      <obj_property name="ObjectShortName">forwardBE[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/alu/B" type="array">
+      <obj_property name="ElementShortName">B[63:0]</obj_property>
+      <obj_property name="ObjectShortName">B[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/alu/ALUControl" type="array">
+      <obj_property name="ElementShortName">ALUControl[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ALUControl[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/alu/ALU32" type="logic">
+      <obj_property name="ElementShortName">ALU32</obj_property>
+      <obj_property name="ObjectShortName">ALU32</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/alu/out" type="array">
+      <obj_property name="ElementShortName">out[63:0]</obj_property>
+      <obj_property name="ObjectShortName">out[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/alu/zero" type="logic">
+      <obj_property name="ElementShortName">zero</obj_property>
+      <obj_property name="ObjectShortName">zero</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/alu/lt" type="logic">
+      <obj_property name="ElementShortName">lt</obj_property>
+      <obj_property name="ObjectShortName">lt</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/alu/ltu" type="logic">
+      <obj_property name="ElementShortName">ltu</obj_property>
+      <obj_property name="ObjectShortName">ltu</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/reg_file/readRegister1" type="array">
+      <obj_property name="ElementShortName">readRegister1[4:0]</obj_property>
+      <obj_property name="ObjectShortName">readRegister1[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/reg_file/readRegister2" type="array">
+      <obj_property name="ElementShortName">readRegister2[4:0]</obj_property>
+      <obj_property name="ObjectShortName">readRegister2[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/reg_file/writeRegister" type="array">
+      <obj_property name="ElementShortName">writeRegister[4:0]</obj_property>
+      <obj_property name="ObjectShortName">writeRegister[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/reg_file/writeData" type="array">
+      <obj_property name="ElementShortName">writeData[63:0]</obj_property>
+      <obj_property name="ObjectShortName">writeData[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/reg_file/readData1" type="array">
+      <obj_property name="ElementShortName">readData1[63:0]</obj_property>
+      <obj_property name="ObjectShortName">readData1[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/reg_file/readData2" type="array">
+      <obj_property name="ElementShortName">readData2[63:0]</obj_property>
+      <obj_property name="ObjectShortName">readData2[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/reg_file/we" type="logic">
+      <obj_property name="ElementShortName">we</obj_property>
+      <obj_property name="ObjectShortName">we</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/hu/stallF" type="logic">
+      <obj_property name="ElementShortName">stallF</obj_property>
+      <obj_property name="ObjectShortName">stallF</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/hu/stallD" type="logic">
+      <obj_property name="ElementShortName">stallD</obj_property>
+      <obj_property name="ObjectShortName">stallD</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/hu/flushD" type="logic">
+      <obj_property name="ElementShortName">flushD</obj_property>
+      <obj_property name="ObjectShortName">flushD</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/hu/flushE" type="logic">
+      <obj_property name="ElementShortName">flushE</obj_property>
+      <obj_property name="ObjectShortName">flushE</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/dmem/memType" type="array">
+      <obj_property name="ElementShortName">memType[2:0]</obj_property>
+      <obj_property name="ObjectShortName">memType[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/dmem/addr" type="array">
+      <obj_property name="ElementShortName">addr[63:0]</obj_property>
+      <obj_property name="ObjectShortName">addr[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/dmem/wd" type="array">
+      <obj_property name="ElementShortName">wd[63:0]</obj_property>
+      <obj_property name="ObjectShortName">wd[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/dmem/rd" type="array">
+      <obj_property name="ElementShortName">rd[63:0]</obj_property>
+      <obj_property name="ObjectShortName">rd[63:0]</obj_property>
+   </wvobject>
+</wave_config>

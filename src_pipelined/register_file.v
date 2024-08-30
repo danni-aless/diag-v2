@@ -10,14 +10,11 @@ module register_file(
         input [`RegAddrBits-1:0] writeRegister,
         input [`DataBusBits-1:0] writeData,
         output reg [`DataBusBits-1:0] readData1,
-        output reg [`DataBusBits-1:0] readData2,
-        output [`DataBusBits-1:0] statusCode
+        output reg [`DataBusBits-1:0] readData2
     );
     
     reg [`DataBusBits-1:0] registers[0:31];
     integer i;
-    
-    assign statusCode = registers[10];
     
     always @(*) begin
         readData1 = registers[readRegister1];

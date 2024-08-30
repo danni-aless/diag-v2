@@ -11,8 +11,7 @@ module diagv2_core(
     output [`DataBusBits-1:0] writeDataM,
     output memWriteM, // signal for dmem
     output [`MemTypeBusBits-1:0] memTypeM, // signal for dmem
-    output ecallW, // signal for testing/debugging
-    output [`DataBusBits-1:0] statusCode // x10 register
+    output ecallW // signal for testing/debugging
     );
     
     // control signals
@@ -101,7 +100,7 @@ module diagv2_core(
         .PC(PCF)
     );
     
-    branch_predictor_gshare bp(
+    branch_predictor_bimodal bp(
         .clk(clk),
         .reset(reset),
         .we(branchOp), // write when instruction is jal, jalr, or branch
@@ -152,8 +151,7 @@ module diagv2_core(
         .writeRegister(writeRegW),
         .writeData(writeDataReg),
         .readData1(readData1D),
-        .readData2(readData2D),
-        .statusCode(statusCode)
+        .readData2(readData2D)
     );
     
     imm_generator imm_gen(
