@@ -12,7 +12,7 @@ module control_unit(
         output [`MemTypeBusBits-1:0] memType,
         output [`RsltSrcBusBits-1:0] resultSrc,
         output regWrite,
-        output ecall
+        output ecall, csrrs
     );
     
     reg [11:0] signals; // signals reg for better assignment
@@ -20,7 +20,8 @@ module control_unit(
     assign {regWrite, immSrc, ALUSrc, memWrite, resultSrc, branch, jal, jalr} = signals;
     assign ALU32 = (op == `OP_IMM_32) | (op == `OP_32);
     assign memType = funct3;
-    assign ecall = op == `ECALL;
+    assign ecall = (op == `SYSTEM) & (funct3 == `Funct3ECALL);
+    assign csrrs = (op == `SYSTEM) & (funct3 == `Funct3CSRRS);
     
     always @(*) begin
         case(op) // for signals reg
@@ -40,7 +41,7 @@ module control_unit(
                 signals = {1'b0, `ImmSrcSType, 1'b1, 1'b1, 3'bxxx, 1'b0, 1'b0, 1'b0};
             `OP_IMM, `OP_IMM_32:
                 signals = {1'b1, `ImmSrcIType, 1'b1, 1'b0, 3'b000, 1'b0, 1'b0, 1'b0};
-            `OP, `OP_32:
+            `OP, `OP_32, `SYSTEM:
                 signals = {1'b1, `ImmSrcRType, 1'b0, 1'b0, 3'b000, 1'b0, 1'b0, 1'b0};
             default:
                 signals = {1'b0, `ImmSrcRType, 1'bx, 1'b0, 3'bxxx, 1'b0, 1'b0, 1'b0};
@@ -54,6 +55,7 @@ module control_unit(
                         ALUControl = (funct3 == `Funct3SRxI) ? {funct7[5], funct3} : {1'b0, funct3};
             `OP, `OP_32:        
                         ALUControl = {funct7[5], funct3};
+            `SYSTEM:    ALUControl = `ALUAdd; // only CSRRS needs ALUAdd
             default:    ALUControl = {`AluCntrBusBits{1'bx}};
         endcase
     end

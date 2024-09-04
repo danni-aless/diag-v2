@@ -42,12 +42,11 @@ void setStats(int enable)
   int i = 0;
 #define READ_CTR(name) do { \
     while (i >= NUM_COUNTERS) ; \
-    uintptr_t csr = 0; /*read_csr(name);*/ \
+    uintptr_t csr = read_csr(name); \
     if (!enable) { csr -= counters[i]; counter_names[i] = #name; } \
-    counters[i++] = 100; \
+    counters[i++] = csr; \
   } while (0)
 
-  /* mcycle and minstret not implemented yet */
   READ_CTR(mcycle);
   READ_CTR(minstret);
 
@@ -114,7 +113,8 @@ void _init(int cid, int nc)
   char* pbuf = buf;
   for (int i = 0; i < NUM_COUNTERS; i++)
     if (counters[i])
-      pbuf += sprintf(pbuf, "%s = %d\n", counter_names[i], counters[i]);
+      pbuf += sprintf(pbuf, "%s = %d\t\t", counter_names[i], counters[i]);
+  pbuf += sprintf(pbuf, "CPI = %ld.%05ld\n", counters[0]/counters[1], 100000*counters[0]/counters[1]%100000);
   if (pbuf != buf)
     printstr(buf);
 

@@ -4,6 +4,7 @@
 `define DataBusBits     64
 `define InstrBusBits    32
 `define RegAddrBits      5
+`define CSRAddrBits     12
 
 `define DataZero    64'b0
 `define DataZero32  32'b0
@@ -33,7 +34,7 @@
 `define OP          7'b0110011
 `define OP_IMM_32   7'b0011011
 `define OP_32       7'b0111011
-`define ECALL       7'b1110011
+`define SYSTEM      7'b1110011
 
 // Funct3
 `define Funct3BEQ   3'b000
@@ -43,6 +44,8 @@
 `define Funct3BLTU  3'b110
 `define Funct3BGEU  3'b111
 `define Funct3SRxI  3'b101
+`define Funct3ECALL 3'b000
+`define Funct3CSRRS 3'b010
 
 // ImmSrc
 `define ImmSrcRType 3'bxxx
@@ -74,6 +77,10 @@
 `define MemTypeWU   3'b110
 
 // RsltSrc
-`define RsltSrcLOAD 3'b001 
+`define RsltSrcLOAD 3'b001
+
+// CSR addresses
+`define MCYCLE      12'hB00
+`define MINSTRET    12'hB02
 
 `endif

@@ -7,8 +7,10 @@ module hazard_unit(
         input [`RegAddrBits-1:0] readRegister2D, readRegister2E,
         input [`RegAddrBits-1:0] writeRegE, writeRegM, writeRegW,
         input [`RsltSrcBusBits-1:0] resultSrcE,
-        input [`DataBusBits-1:0] PCD, PCNextE, PCPlus4E,
+        input [`DataBusBits-1:0] PCD, PCNextE,
+        input bubble,
         input regWriteM, regWriteW,
+        input csrrs,
         output PCSrc,
         output stallF, stallD,
         output flushD, flushE,
@@ -19,7 +21,7 @@ module hazard_unit(
     reg reg1Used, reg2Used, loadStall;
     
     // prediction control
-    assign validPrediction = (PCD==PCNextE) | !PCPlus4E;
+    assign validPrediction = (PCD==PCNextE) | bubble;
     assign PCSrc = validPrediction;
     
     // stalling for load hazard
@@ -38,9 +40,9 @@ module hazard_unit(
             forwardAE = 2'b01;
         else
             forwardAE = 2'b00;
-        if(readRegister2E==writeRegM & regWriteM & readRegister2E!=`RegZero)
+        if(readRegister2E==writeRegM & regWriteM & readRegister2E!=`RegZero & ~csrrs)
             forwardBE = 2'b10;
-        else if(readRegister2E==writeRegW & regWriteW & readRegister2E!=`RegZero)
+        else if(readRegister2E==writeRegW & regWriteW & readRegister2E!=`RegZero & ~csrrs)
             forwardBE = 2'b01;
         else
             forwardBE = 2'b00;

@@ -7,7 +7,6 @@ module diagv2_tb_isa();
 
     reg CLK, RESET, HALT;
     wire ecall;
-    wire [`DataBusBits-1:0] statusCode; // a0/x10 register
     
     integer i, passed_tests, failed_tests;
     
@@ -120,8 +119,7 @@ module diagv2_tb_isa();
     diagv2_top top(
         .clk(CLK),
         .reset(RESET),
-        .ecall(ecall),
-        .statusCode(statusCode)
+        .ecall(ecall)
     );
 	
     initial begin
@@ -142,25 +140,35 @@ module diagv2_tb_isa();
         #10 CLK <= ~(CLK ^ HALT); // HALT==0 -> CLK <= ~CLK, HALT==1 -> CLK <= CLK
     end
     
+    wire [`DataBusBits-1:0] systemCall = top.core.reg_file.registers[17]; // a7/x17 register
+    wire [`DataBusBits-1:0] arg0 = top.core.reg_file.registers[10]; // a0/x10 register
+    
     always @(negedge CLK) begin
         if(ecall) begin
-            $display("diagv2_tb (%s) - ECALL Status code: %2d", riscv_tests[i], statusCode);
             HALT <= 1'b1;
-            if(!statusCode)
-                passed_tests = passed_tests+1;
-            else
-                failed_tests = failed_tests+1;
-            i = i+1;
-            if(i<TESTS) begin
-                $readmemh(riscv_tests[i], top.imem.imem);
-                $readmemh(riscv_tests_data[i], top.dmem.dmem);
-                RESET <= 1'b1;
-                HALT <= 1'b0;
-                #25;
-                RESET <= 1'b0;
+            // $display("diagv2_tb (%s) - ECALL %2d", riscv_tests[i], systemCall);
+            if(systemCall == 93) // EXIT ecall
+            begin
+                $display("diagv2_tb (%s) - EXIT Status code: %2d", riscv_tests[i], arg0);
+                if(!arg0)
+                    passed_tests = passed_tests+1;
+                else
+                    failed_tests = failed_tests+1;
+                i = i+1;
+                if(i<TESTS) begin
+                    RESET <= 1'b1;
+                    HALT <= 1'b0;
+                    #10;
+                    $readmemh(riscv_tests[i], top.imem.imem);
+                    $readmemh(riscv_tests_data[i], top.dmem.dmem);
+                    #15;
+                    RESET <= 1'b0;
+                end
+                else
+                    $display("diagv2_tb - Passed tests: %2d, failed tests: %2d", passed_tests, failed_tests);
             end
-            else
-                $display("diagv2_tb - Passed tests: %2d, failed tests: %2d", passed_tests, failed_tests);
+            else // invalid ecall
+                $display("diagv2_tb (%s) - ECALL not valid", riscv_tests[i]);
         end
     end
 

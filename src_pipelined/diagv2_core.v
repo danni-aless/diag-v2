@@ -15,6 +15,7 @@ module diagv2_core(
     );
     
     // control signals
+    wire csrrsD, csrrsE; // signal for reading mcycle and minstret
     wire [`ImmSrcBusBits-1:0] immSrc;
     wire ALUSrcD, ALUSrcE;
     wire [`AluCntrBusBits-1:0] ALUControlD, ALUControlE;
@@ -43,6 +44,7 @@ module diagv2_core(
     wire [`Funct7BusBits-1:0] funct7;
     wire [`RegAddrBits-1:0] readRegister1D, readRegister1E;
     wire [`RegAddrBits-1:0] readRegister2D, readRegister2E;
+    wire [`CSRAddrBits-1:0] readCSR;
     wire [`RegAddrBits-1:0] writeRegD, writeRegE, writeRegM, writeRegW;
     wire [`DataBusBits-1:0] writeDataReg;
     wire [`DataBusBits-1:0] readData1D, readData1E;
@@ -69,6 +71,7 @@ module diagv2_core(
     assign funct7 = instrD[31:25];
     assign readRegister1D = instrD[19:15];
     assign readRegister2D = instrD[24:20];
+    assign readCSR = instrD[31:20];
     assign writeRegD = instrD[11:7];
     
     // EXECUTE
@@ -139,15 +142,19 @@ module diagv2_core(
         .memType(memTypeD),
         .resultSrc(resultSrcD),
         .regWrite(regWriteD),
-        .ecall(ecallD)
+        .ecall(ecallD),
+        .csrrs(csrrsD)
     );
     
     register_file reg_file(
         .clk(clk),
         .reset(reset),
         .we(regWriteW),
+        .csrrs(csrrsD),
+        .bubble(PCPlus4W == `DataZero), // PCPlus4W is 0 only when there is a bubble
         .readRegister1(readRegister1D),
         .readRegister2(readRegister2D),
+        .readCSR(readCSR),
         .writeRegister(writeRegW),
         .writeData(writeDataReg),
         .readData1(readData1D),
@@ -175,6 +182,7 @@ module diagv2_core(
         .resultSrc_in(resultSrcD),
         .regWrite_in(regWriteD),
         .ecall_in(ecallD),
+        .csrrs_in(csrrsD),
         .readData1_in(readData1D),
         .readData2_in(readData2D),
         .funct3_out(funct3E),
@@ -195,6 +203,7 @@ module diagv2_core(
         .resultSrc_out(resultSrcE),
         .regWrite_out(regWriteE),
         .ecall_out(ecallE),
+        .csrrs_out(csrrsE),
         .readData1_out(readData1E),
         .readData2_out(readData2E),
         .PC_out(PCE),
@@ -296,9 +305,10 @@ module diagv2_core(
         .resultSrcE(resultSrcE),
         .PCD(PCD),
         .PCNextE(PCNextE),
-        .PCPlus4E(PCPlus4E),
+        .bubble(PCPlus4E == `DataZero), // PCPlus4E is 0 only when there is a bubble
         .regWriteM(regWriteM),
         .regWriteW(regWriteW),
+        .csrrs(csrrsE),
         .PCSrc(PCSrc),
         .stallF(stallF),
         .stallD(stallD),
