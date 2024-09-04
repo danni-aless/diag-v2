@@ -80,7 +80,9 @@
 `define RsltSrcLOAD 3'b001
 
 // CSR addresses
-`define MCYCLE      12'hB00
-`define MINSTRET    12'hB02
+`define MCYCLE          12'hB00 // total cycles
+`define MINSTRET        12'hB02 // total retired instructions
+`define MHPMCOUNTER3    12'hB03 // total branch instructions
+`define MHPMCOUNTER4    12'hB04 // total branch instructions which were predicted correctly 
 
 `endif

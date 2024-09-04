@@ -33,7 +33,7 @@ static uintptr_t syscall(uintptr_t which, uint64_t arg0, uint64_t arg1, uint64_t
   return magic_mem[0];
 }
 
-#define NUM_COUNTERS 2
+#define NUM_COUNTERS 4
 static uintptr_t counters[NUM_COUNTERS];
 static char* counter_names[NUM_COUNTERS];
 
@@ -49,6 +49,8 @@ void setStats(int enable)
 
   READ_CTR(mcycle);
   READ_CTR(minstret);
+  READ_CTR(mhpmcounter3);
+  READ_CTR(mhpmcounter4);
 
 #undef READ_CTR
 }
@@ -114,7 +116,8 @@ void _init(int cid, int nc)
   for (int i = 0; i < NUM_COUNTERS; i++)
     if (counters[i])
       pbuf += sprintf(pbuf, "%s = %d\t\t", counter_names[i], counters[i]);
-  pbuf += sprintf(pbuf, "CPI = %ld.%05ld\n", counters[0]/counters[1], 100000*counters[0]/counters[1]%100000);
+  pbuf += sprintf(pbuf, "CPI = %ld.%05ld\t\t", counters[0]/counters[1], 100000*counters[0]/counters[1]%100000);
+  pbuf += sprintf(pbuf, "Branch Prediction Accuracy = %ld.%05ld\n", counters[3]/counters[2], 100000*counters[3]/counters[2]%100000);
   if (pbuf != buf)
     printstr(buf);
 

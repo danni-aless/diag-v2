@@ -152,6 +152,8 @@ module diagv2_core(
         .we(regWriteW),
         .csrrs(csrrsD),
         .bubble(PCPlus4W == `DataZero), // PCPlus4W is 0 only when there is a bubble
+        .branchOp(branchOp), // increment mhpmcounter3 only when instruction is jal, jalr, or branch
+        .validPrediction(PCSrc), // increment mhpmcounter4 only when instruction is jal, jalr, or branch and was predicted correctly
         .readRegister1(readRegister1D),
         .readRegister2(readRegister2D),
         .readCSR(readCSR),

@@ -7,6 +7,7 @@ module register_file(
         input we,
         input csrrs,
         input bubble,
+        input branchOp, validPrediction,
         input [`RegAddrBits-1:0] readRegister1,
         input [`RegAddrBits-1:0] readRegister2,
         input [`CSRAddrBits-1:0] readCSR,
@@ -40,6 +41,11 @@ module register_file(
                 registers[writeRegister] <= writeData;
             if(~bubble) // minstret should be incremented only when a valid instruction is present
                 csr[`MINSTRET] <= csr[`MINSTRET]+1;
+            if(branchOp) begin
+                csr[`MHPMCOUNTER3] <= csr[`MHPMCOUNTER3]+1; // mhpmcounter3 should be incremented only when instruction is jal, jalr, or branch
+                if(validPrediction)
+                    csr[`MHPMCOUNTER4] <= csr[`MHPMCOUNTER4]+1; // mhpmcounter4 should be incremented only when instruction is jal, jalr, or branch and was predicted correctly
+            end
             csr[`MCYCLE] <= csr[`MCYCLE]+1;
         end
     end
