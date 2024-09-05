@@ -30,6 +30,7 @@ bmarks = \
 	memcpy \
 	multiply \
 	dhrystone \
+	coremark \
 	fib
 
 #--------------------------------------------------------------------

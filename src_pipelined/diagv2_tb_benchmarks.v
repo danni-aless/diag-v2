@@ -3,7 +3,7 @@
 
 module diagv2_tb_benchmarks();
 
-    parameter BMARKS = 9; // total benchmarks
+    parameter BMARKS = 10; // total benchmarks
     parameter BMARK_ID = 8; // benchmark to execute
 
     reg CLK, RESET, HALT;
@@ -20,6 +20,7 @@ module diagv2_tb_benchmarks();
         "memcpy.mem",
         "multiply.mem",
         "dhrystone.mem",
+        "coremark.mem",
         "fib.mem"
     };
     
@@ -32,6 +33,7 @@ module diagv2_tb_benchmarks();
         "memcpy_data.mem",
         "multiply_data.mem",
         "dhrystone_data.mem",
+        "coremark_data.mem",
         "fib_data.mem"
     };
     

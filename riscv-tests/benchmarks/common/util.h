@@ -3,8 +3,8 @@
 #ifndef __UTIL_H
 #define __UTIL_H
 
-extern void setStats(int enable);
 extern int printf(const char* fmt, ...);
+extern void setStats(int enable);
 
 #include <stdint.h>
 
