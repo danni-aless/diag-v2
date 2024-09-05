@@ -11,7 +11,7 @@ module branch_predictor_bimodal(
     output [`DataBusBits-1:0] PCPrediction
     );
     
-    parameter N = 10; // BTB index length
+    parameter N = 14; // BTB index length
     
 //  (N = 10)
 //  PC ADDRESS:
@@ -20,15 +20,16 @@ module branch_predictor_bimodal(
 //       52 bits |  10 bits  | 2 bits
     
 //  BTB LINE:
-//      115  -  64|63      -      0
-//          TAG   | TARGET ADDRESS
-//       52 bits  |    64 bits
+//         116   |115  -   64|63      -      0
+//     VALID BIT |    TAG    | TARGET ADDRESS
+//        1 bit  |  52 bits  |    64 bits
     
     reg [1:0] BHT[0:(1<<N)-1]; // branch history table (2-bit saturation counters)
-    reg [125-N:0] BTB[0:(1<<N)-1]; // branch target buffer (direct-mapped cache)
+    reg [126-N:0] BTB[0:(1<<N)-1]; // branch target buffer (direct-mapped cache)
     
     wire [61-N:0] PCTag = PC[63:N+2];
     wire [N-1:0] BTBIndex = PC[N+1:2];
+    wire validBit = BTB[BTBIndex][126-N];
     wire [61-N:0] BTBTag = BTB[BTBIndex][125-N:64];
     wire takenPrediction = BHT[BTBIndex][1]; // when counter is strongly or weakly taken
     wire [63:0] target = BTB[BTBIndex][63:0];
@@ -36,20 +37,20 @@ module branch_predictor_bimodal(
     wire [61-N:0] PCTagUpdate = PCUpdate[63:N+2];
     wire [N-1:0] BTBIndexUpdate = PCUpdate[N+1:2];
     
-    assign PCPrediction = (PCTag==BTBTag & takenPrediction) ? target : PCPlus4;
+    assign PCPrediction = (validBit & PCTag==BTBTag & takenPrediction) ? target : PCPlus4;
     
     integer i;
     
     always @(negedge clk) begin
         if(reset) begin
             for(i=0; i<(1<<N); i=i+1) begin
-                BTB[i] <= {126-N{1'b0}};
-                BHT[i] <= 2'b0;
+                BTB[i] <= {127-N{1'b0}};
+                BHT[i] <= 2'b11; // seems the best initialization
             end
         end
         else if(we) begin
             if(takenUpdate)
-                BTB[BTBIndexUpdate] <= {PCTagUpdate, targetUpdate}; // BTB line update
+                BTB[BTBIndexUpdate] <= {1'b1, PCTagUpdate, targetUpdate}; // BTB line update
             case(BHT[BTBIndexUpdate]) // 2-bit saturation counter update
                 2'b00: // strongly not taken
                     BHT[BTBIndexUpdate] <= takenUpdate ? 2'b01 : 2'b00;
