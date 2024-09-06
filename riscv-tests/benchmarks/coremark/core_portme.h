@@ -206,7 +206,7 @@ void portable_fini(core_portable *p);
 #endif
 
 #ifndef ITERATIONS
-#define ITERATIONS 1
+#define ITERATIONS 5
 #endif
 
 extern int printf(const char* fmt, ...);
