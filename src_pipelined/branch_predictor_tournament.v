@@ -11,7 +11,7 @@ module branch_predictor_tournament(
     output [`DataBusBits-1:0] PCPrediction
     );
     
-    parameter N = 10; // GHR and BTB index length
+    parameter N = 13; // GHR and BTB index length
     
 //  (N = 10)
 //  PC ADDRESS:

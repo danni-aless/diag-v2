@@ -3,8 +3,8 @@
 
 module diagv2_tb_benchmarks();
 
-    parameter BMARKS = 10; // total benchmarks
-    parameter BMARK_ID = 8; // benchmark to execute
+    parameter BMARKS = 11; // total benchmarks
+    parameter BMARK_ID = 10; // benchmark to execute
 
     reg CLK, RESET, HALT;
     wire ecall;
@@ -21,6 +21,7 @@ module diagv2_tb_benchmarks();
         "multiply.mem",
         "dhrystone.mem",
         "coremark.mem",
+        "branchy.mem",
         "fib.mem"
     };
     
@@ -34,6 +35,7 @@ module diagv2_tb_benchmarks();
         "multiply_data.mem",
         "dhrystone_data.mem",
         "coremark_data.mem",
+        "branchy_data.mem",
         "fib_data.mem"
     };
     
@@ -74,6 +76,7 @@ module diagv2_tb_benchmarks();
             if(systemCall == 93) // EXIT ecall
             begin 
                 $display("diagv2_tb (%s) - EXIT Status code: %2d", riscv_tests[BMARK_ID], arg0);
+                $timeformat(-9, 0, "ns", 8);
                 $display("diagv2_tb (%s) - Benchmark ended at time: %t", riscv_tests[BMARK_ID], $realtime);
             end 
             else if(systemCall == 4) // PRINT ecall

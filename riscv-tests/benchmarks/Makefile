@@ -31,6 +31,7 @@ bmarks = \
 	multiply \
 	dhrystone \
 	coremark \
+	branchy \
 	fib
 
 #--------------------------------------------------------------------
