@@ -11,8 +11,7 @@ module diagv2_core(
     output [`DataBusBits-1:0] writeData,
     output memWrite, // signal for dmem
     output [`MemTypeBusBits-1:0] memType, // signal for dmem
-    output ecall, // signal for testing/debugging
-    output [`DataBusBits-1:0] statusCode // x10 register
+    output ecall // signal for testing/debugging
     );
     
     // signals
@@ -98,8 +97,7 @@ module diagv2_core(
         .writeRegister(writeRegister),
         .writeData(writeDataReg),
         .readData1(readData1),
-        .readData2(readData2),
-        .statusCode(statusCode)
+        .readData2(readData2)
     );
     
     imm_generator imm_gen(
