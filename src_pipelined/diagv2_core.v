@@ -39,7 +39,7 @@ module diagv2_core(
     wire [`DataBusBits-1:0] PCPlus4F, PCPlus4D, PCPlus4E, PCPlus4M, PCPlus4W;
     
     wire [`InstrBusBits-1:0] instrD;
-    wire [`OpBusBits-1:0] opD;
+    wire [`OpBusBits-1:0] opD, opE, opM, opW;
     wire [`Funct3BusBits-1:0] funct3D, funct3E;
     wire [`Funct7BusBits-1:0] funct7;
     wire [`RegAddrBits-1:0] readRegister1D, readRegister1E;
@@ -152,6 +152,7 @@ module diagv2_core(
         .we(regWriteW),
         .csrrs(csrrsD),
         .bubble(PCPlus4W == `DataZero), // PCPlus4W is 0 only when there is a bubble
+        .opcode(opW),
         .branchOp(branchOp), // increment mhpmcounter3 only when instruction is jal, jalr, or branch
         .validPrediction(PCSrc), // increment mhpmcounter4 only when instruction is jal, jalr, or branch and was predicted correctly
         .readRegister1(readRegister1D),
@@ -185,6 +186,7 @@ module diagv2_core(
         .regWrite_in(regWriteD),
         .ecall_in(ecallD),
         .csrrs_in(csrrsD),
+        .op_in(opD),
         .readData1_in(readData1D),
         .readData2_in(readData2D),
         .funct3_out(funct3E),
@@ -206,6 +208,7 @@ module diagv2_core(
         .regWrite_out(regWriteE),
         .ecall_out(ecallE),
         .csrrs_out(csrrsE),
+        .op_out(opE),
         .readData1_out(readData1E),
         .readData2_out(readData2E),
         .PC_out(PCE),
@@ -253,6 +256,7 @@ module diagv2_core(
         .resultSrc_in(resultSrcE),
         .regWrite_in(regWriteE),
         .ecall_in(ecallE),
+        .op_in(opE),
         .ALUResult_in(ALUResultE),
         .writeData_in(writeDataE),
         .PCPlusImm_in(PCPlusImmE),
@@ -264,6 +268,7 @@ module diagv2_core(
         .resultSrc_out(resultSrcM),
         .regWrite_out(regWriteM),
         .ecall_out(ecallM),
+        .op_out(opM),
         .ALUResult_out(ALUResultM),
         .writeData_out(writeDataM),
         .PCPlusImm_out(PCPlusImmM),
@@ -278,6 +283,7 @@ module diagv2_core(
         .resultSrc_in(resultSrcM),
         .regWrite_in(regWriteM),
         .ecall_in(ecallM),
+        .op_in(opM),
         .ALUResult_in(ALUResultM),
         .readData_in(readDataM),
         .PCPlusImm_in(PCPlusImmM),
@@ -287,6 +293,7 @@ module diagv2_core(
         .resultSrc_out(resultSrcW),
         .regWrite_out(regWriteW),
         .ecall_out(ecallW),
+        .op_out(opW),
         .ALUResult_out(ALUResultW),
         .readData_out(readDataW),
         .PCPlusImm_out(PCPlusImmW),

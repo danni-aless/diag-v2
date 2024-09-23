@@ -7,6 +7,7 @@ module register_file(
         input we,
         input csrrs,
         input bubble,
+        input [`OpBusBits-1:0] opcode,
         input branchOp, validPrediction,
         input [`RegAddrBits-1:0] readRegister1,
         input [`RegAddrBits-1:0] readRegister2,
@@ -39,13 +40,20 @@ module register_file(
         else begin
             if(we && (writeRegister != `RegZero)) // 0-reg must be 0 
                 registers[writeRegister] <= writeData;
-            if(~bubble) // minstret should be incremented only when a valid instruction is present
-                csr[`MINSTRET] <= csr[`MINSTRET]+1;
-            if(branchOp) begin
-                csr[`MHPMCOUNTER3] <= csr[`MHPMCOUNTER3]+1; // mhpmcounter3 should be incremented only when instruction is jal, jalr, or branch
-                if(validPrediction)
-                    csr[`MHPMCOUNTER4] <= csr[`MHPMCOUNTER4]+1; // mhpmcounter4 should be incremented only when instruction is jal, jalr, or branch and was predicted correctly
+            if(~bubble) begin 
+                csr[`MINSTRET] <= csr[`MINSTRET]+1; // minstret should be incremented only when a valid instruction is present
+                case(opcode)
+                    `OP, `OP_32, `OP_IMM, `OP_IMM_32: // ALU instructions
+                        csr[`MHPMCOUNTER3] <= csr[`MHPMCOUNTER3]+1;
+                    `LOAD, `STORE: // memory instructions
+                        csr[`MHPMCOUNTER4] <= csr[`MHPMCOUNTER4]+1;
+                    `JAL, `JALR, `BRANCH: // branch instructions
+                        csr[`MHPMCOUNTER5] <= csr[`MHPMCOUNTER5]+1;
+                    default: ;
+                endcase
             end
+            if(branchOp & validPrediction)
+                csr[`MHPMCOUNTER6] <= csr[`MHPMCOUNTER6]+1; // total number of correctly predicted branch instructions
             csr[`MCYCLE] <= csr[`MCYCLE]+1;
         end
     end
