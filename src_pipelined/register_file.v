@@ -6,7 +6,6 @@ module register_file(
         input reset,
         input we,
         input csrrs,
-        input bubble,
         input [`OpBusBits-1:0] opcode,
         input branchOp, validPrediction,
         input [`RegAddrBits-1:0] readRegister1,
@@ -40,7 +39,7 @@ module register_file(
         else begin
             if(we && (writeRegister != `RegZero)) // 0-reg must be 0 
                 registers[writeRegister] <= writeData;
-            if(~bubble) begin 
+            if(opcode) begin 
                 csr[`MINSTRET] <= csr[`MINSTRET]+1; // minstret should be incremented only when a valid instruction is present
                 case(opcode)
                     `OP, `OP_32, `OP_IMM, `OP_IMM_32: // ALU instructions

@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="876.870 ns"></ZoomEndTime>
-      <Cursor1Time time="10,000,000.000 ns"></Cursor1Time>
+      <ZoomStartTime time="396,031.836 ns"></ZoomStartTime>
+      <ZoomEndTime time="397,241.633 ns"></ZoomEndTime>
+      <Cursor1Time time="396,560.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="119"></NameColumnWidth>
-      <ValueColumnWidth column_width="72"></ValueColumnWidth>
+      <NameColumnWidth column_width="152"></NameColumnWidth>
+      <ValueColumnWidth column_width="102"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="33" />
+   <WVObjectSize size="34" />
    <wvobject fp_name="/diagv2_tb_benchmarks/CLK" type="logic">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -151,5 +151,9 @@
    <wvobject fp_name="/diagv2_tb_benchmarks/top/dmem/rd" type="array">
       <obj_property name="ElementShortName">rd[63:0]</obj_property>
       <obj_property name="ObjectShortName">rd[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_benchmarks/top/core/reg_file/opcode" type="array">
+      <obj_property name="ElementShortName">opcode[6:0]</obj_property>
+      <obj_property name="ObjectShortName">opcode[6:0]</obj_property>
    </wvobject>
 </wave_config>

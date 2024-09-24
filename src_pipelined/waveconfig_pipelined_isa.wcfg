@@ -12,12 +12,12 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="410.501 ns"></ZoomEndTime>
-      <Cursor1Time time="0.000 ns"></Cursor1Time>
+      <ZoomEndTime time="547.632 ns"></ZoomEndTime>
+      <Cursor1Time time="100,500,000.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="134"></NameColumnWidth>
-      <ValueColumnWidth column_width="107"></ValueColumnWidth>
+      <ValueColumnWidth column_width="102"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="34" />
    <wvobject fp_name="/diagv2_tb_isa/CLK" type="logic">
@@ -35,10 +35,6 @@
    <wvobject fp_name="/diagv2_tb_isa/ecall" type="logic">
       <obj_property name="ElementShortName">ecall</obj_property>
       <obj_property name="ObjectShortName">ecall</obj_property>
-   </wvobject>
-   <wvobject fp_name="/diagv2_tb_isa/statusCode" type="array">
-      <obj_property name="ElementShortName">statusCode[63:0]</obj_property>
-      <obj_property name="ObjectShortName">statusCode[63:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/diagv2_tb_isa/i" type="array">
       <obj_property name="ElementShortName">i[31:0]</obj_property>
@@ -155,5 +151,9 @@
    <wvobject fp_name="/diagv2_tb_isa/top/dmem/rd" type="array">
       <obj_property name="ElementShortName">rd[63:0]</obj_property>
       <obj_property name="ObjectShortName">rd[63:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/diagv2_tb_isa/top/core/reg_file/registers[1]" type="array">
+      <obj_property name="ElementShortName">[1][63:0]</obj_property>
+      <obj_property name="ObjectShortName">[1][63:0]</obj_property>
    </wvobject>
 </wave_config>

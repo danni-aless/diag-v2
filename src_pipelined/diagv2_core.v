@@ -64,6 +64,7 @@ module diagv2_core(
     
     // FETCH
     assign PCNextF = PCSrc ? PCPrediction : PCNextE;
+//    assign PCNextF = PCSrc ? PCPlus4F : PCNextE; // ALWAYS NOT TAKEN
     
     // DECODE
     assign opD = instrD[6:0];
@@ -77,8 +78,10 @@ module diagv2_core(
     // EXECUTE
     assign srcA = forwardAE[1] ? forwardingMtoE :
                   forwardAE[0] ? writeDataReg : readData1E;
+//    assign srcA = readData1E; // NO FORWARDING
     assign writeDataE = forwardBE[1] ? forwardingMtoE :
                         forwardBE[0] ? writeDataReg : readData2E;
+//    assign writeDataE = readData2E; // NO FORWARDING
     assign srcB = ALUSrcE ? immExtE : writeDataE;
     
     // MEMORY
@@ -151,7 +154,6 @@ module diagv2_core(
         .reset(reset),
         .we(regWriteW),
         .csrrs(csrrsD),
-        .bubble(PCPlus4W == `DataZero), // PCPlus4W is 0 only when there is a bubble
         .opcode(opW),
         .branchOp(branchOp), // increment mhpmcounter3 only when instruction is jal, jalr, or branch
         .validPrediction(PCSrc), // increment mhpmcounter4 only when instruction is jal, jalr, or branch and was predicted correctly
@@ -315,6 +317,7 @@ module diagv2_core(
         .PCD(PCD),
         .PCNextE(PCNextE),
         .bubble(PCPlus4E == `DataZero), // PCPlus4E is 0 only when there is a bubble
+        .regWriteE(regWriteE),
         .regWriteM(regWriteM),
         .regWriteW(regWriteW),
         .csrrs(csrrsE),

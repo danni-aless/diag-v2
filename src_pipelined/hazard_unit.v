@@ -9,7 +9,7 @@ module hazard_unit(
         input [`RsltSrcBusBits-1:0] resultSrcE,
         input [`DataBusBits-1:0] PCD, PCNextE,
         input bubble,
-        input regWriteM, regWriteW,
+        input regWriteE, regWriteM, regWriteW,
         input csrrs,
         output PCSrc,
         output stallF, stallD,
@@ -18,19 +18,19 @@ module hazard_unit(
     );
     
     wire validPrediction;
-    reg reg1Used, reg2Used, loadStall;
+    reg reg1Used, reg2Used, loadStall, stall;
     
     // prediction control
     assign validPrediction = (PCD==PCNextE) | bubble;
     assign PCSrc = validPrediction;
     
     // stalling for load hazard
-    assign stallF = loadStall;
-    assign stallD = loadStall;
+    assign stallF = stall & validPrediction; // validPrediction is necessary for no forwarding
+    assign stallD = stall & validPrediction; // validPrediction is necessary for no forwarding
     
     // flushing for load and control hazard
     assign flushD = ~validPrediction;
-    assign flushE = loadStall | ~validPrediction;
+    assign flushE = stall | ~validPrediction;
     
     // forwarding for data hazard
     always @(*) begin
@@ -53,6 +53,17 @@ module hazard_unit(
         reg2Used = opD==`BRANCH | opD==`STORE | opD==`OP | opD==`OP_32;
         loadStall = (resultSrcE===`RsltSrcLOAD) & ((readRegister1D==writeRegE & readRegister1D!=`RegZero & reg1Used) 
                                                 | (readRegister2D==writeRegE & readRegister2D!=`RegZero & reg2Used));
+        stall = loadStall;
     end
+    
+    // NO FORWADING
+/*   always @(*) begin
+        reg1Used = opD==`JALR | opD==`BRANCH | opD==`LOAD | opD==`STORE | opD==`OP_IMM | opD==`OP | opD==`OP_IMM_32 | opD==`OP_32;
+        reg2Used = opD==`BRANCH | opD==`STORE | opD==`OP | opD==`OP_32;
+        stall = (reg1Used & readRegister1D==writeRegE & regWriteE & readRegister1D!=`RegZero)
+              | (reg1Used & readRegister1D==writeRegM & regWriteM & readRegister1D!=`RegZero)
+              | (reg2Used & readRegister2D==writeRegE & regWriteE & readRegister2D!=`RegZero & ~csrrs)
+              | (reg2Used & readRegister2D==writeRegM & regWriteM & readRegister2D!=`RegZero & ~csrrs);
+    end */
     
 endmodule
