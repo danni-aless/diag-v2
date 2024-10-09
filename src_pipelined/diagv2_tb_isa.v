@@ -149,7 +149,7 @@ module diagv2_tb_isa();
             // $display("diagv2_tb (%s) - ECALL %2d", riscv_tests[i], systemCall);
             if(systemCall == 93) // EXIT ecall
             begin
-                $display("diagv2_tb (%s) - EXIT Status code: %2d", riscv_tests[i], arg0);
+                $display("diagv2_tb_isa (%s) - EXIT Status code: %2d", riscv_tests[i], arg0);
                 if(!arg0)
                     passed_tests = passed_tests+1;
                 else

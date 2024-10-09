@@ -4,7 +4,7 @@
 module diagv2_tb_benchmarks();
 
     parameter BMARKS = 11; // total benchmarks
-    parameter BMARK_ID = 10; // benchmark to execute
+    parameter BMARK_ID = 0; // benchmark to execute
 
     reg CLK, RESET, HALT;
     wire ecall;

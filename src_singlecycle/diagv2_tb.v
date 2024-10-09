@@ -130,8 +130,8 @@ module diagv2_tb();
         RESET <= 1'b1;
         HALT <= 1'b0;
         #10;
-        $readmemh(riscv_tests[i], top.imem.imem); // write machine code to instruction memory
-        $readmemh(riscv_tests_data[i], top.dmem.dmem); // write data to data memory
+        $readmemh(riscv_tests[0], top.imem.imem); // write machine code to instruction memory
+        $readmemh(riscv_tests_data[0], top.dmem.dmem); // write data to data memory
         #15;
         RESET <= 1'b0;
     end

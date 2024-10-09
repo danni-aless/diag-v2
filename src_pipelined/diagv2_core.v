@@ -33,7 +33,8 @@ module diagv2_core(
     wire flushD, flushE;
     wire [`ForwardBusBits-1:0] forwardAE, forwardBE;
 
-    wire [`DataBusBits-1:0] PCNextF, PCNextE;
+    reg [`DataBusBits-1:0] PCNextF;
+    wire [`DataBusBits-1:0] PCNextE;
     wire [`DataBusBits-1:0] PCD, PCE;
     wire [`DataBusBits-1:0] PCPrediction;
     wire [`DataBusBits-1:0] PCPlus4F, PCPlus4D, PCPlus4E, PCPlus4M, PCPlus4W;
@@ -46,25 +47,29 @@ module diagv2_core(
     wire [`RegAddrBits-1:0] readRegister2D, readRegister2E;
     wire [`CSRAddrBits-1:0] readCSR;
     wire [`RegAddrBits-1:0] writeRegD, writeRegE, writeRegM, writeRegW;
-    wire [`DataBusBits-1:0] writeDataReg;
+    reg [`DataBusBits-1:0] writeDataReg;
     wire [`DataBusBits-1:0] readData1D, readData1E;
     wire [`DataBusBits-1:0] readData2D, readData2E;
     wire [`DataBusBits-1:0] immExtD, immExtE, immExtM, immExtW;
     
-    wire [`DataBusBits-1:0] srcA, srcB;
+    reg [`DataBusBits-1:0] srcA, srcB;
     wire [`DataBusBits-1:0] ALUResultE, ALUResultW;
     wire zero, lt, ltu; // ALU signals
-    wire [`DataBusBits-1:0] writeDataE;
+    reg [`DataBusBits-1:0] writeDataE;
     wire [`DataBusBits-1:0] PCPlusImmE, PCPlusImmM, PCPlusImmW;
     wire branchOp, taken;
     
-    wire [`DataBusBits-1:0] forwardingMtoE;
+    reg [`DataBusBits-1:0] forwardingMtoE;
     
     wire [`DataBusBits-1:0] readDataW;
     
     // FETCH
-    assign PCNextF = PCSrc ? PCPrediction : PCNextE;
-//    assign PCNextF = PCSrc ? PCPlus4F : PCNextE; // ALWAYS NOT TAKEN
+    always @(*) begin
+        case(PCSrc) // for signal PCNext of PC
+            1'b0: PCNextF = PCNextE;
+            1'b1: PCNextF = PCPrediction; // PCPlus4F for "always not taken"
+        endcase
+    end
     
     // DECODE
     assign opD = instrD[6:0];
@@ -76,23 +81,50 @@ module diagv2_core(
     assign writeRegD = instrD[11:7];
     
     // EXECUTE
-    assign srcA = forwardAE[1] ? forwardingMtoE :
-                  forwardAE[0] ? writeDataReg : readData1E;
-//    assign srcA = readData1E; // NO FORWARDING
-    assign writeDataE = forwardBE[1] ? forwardingMtoE :
-                        forwardBE[0] ? writeDataReg : readData2E;
-//    assign writeDataE = readData2E; // NO FORWARDING
-    assign srcB = ALUSrcE ? immExtE : writeDataE;
+    always @(*) begin
+        case(forwardAE) // for signal A of ALU
+            2'b00: srcA = readData1E;
+            2'b01: srcA = writeDataReg;
+            default: srcA = forwardingMtoE;
+        endcase
+        //srcA = readData1E; // NO FORWARDING
+    end
+    always @(*) begin
+        case(forwardBE) // for signal writeDataE
+            2'b00: writeDataE = readData2E;
+            2'b01: writeDataE = writeDataReg;
+            default: writeDataE = forwardingMtoE;
+        endcase
+        //writeDataE = readData2E; // NO FORWARDING
+    end
+    always @(*) begin
+        case(ALUSrcE) // for signal B of ALU
+            1'b0: srcB = writeDataE; // BRANCH, OP(_32)
+            1'b1: srcB = immExtE;    // JALR, LOAD, STORE, OP_IMM(_32)
+        endcase
+    end
     
     // MEMORY
-    assign forwardingMtoE = resultSrcM[2] ? PCPlusImmM : 
-                            resultSrcM[1] ? (resultSrcM[0] ? immExtM : PCPlus4M) 
-                                          : (resultSrcM[0] ? `DataZero : ALUResultM);
+    always @(*) begin   
+        case(resultSrcM)// for signal forwardingMtoE
+            3'b000: forwardingMtoE = ALUResultM;  // OP(_32), OP_IMM(_32)
+            3'b001: forwardingMtoE = `DataZero;   // not valid (load stall)
+            3'b010: forwardingMtoE = PCPlus4M;    // JAL, JALR
+            3'b011: forwardingMtoE = immExtM;     // LUI
+            default: forwardingMtoE = PCPlusImmM; // AUIPC
+        endcase
+    end
     
     // WRITEBACK
-    assign writeDataReg = resultSrcW[2] ? PCPlusImmW : 
-                          resultSrcW[1] ? (resultSrcW[0] ? immExtW : PCPlus4W) 
-                                        : (resultSrcW[0] ? readDataW : ALUResultW);
+    always @(*) begin   
+        case(resultSrcW)// for signal writeDataReg of Register File
+            3'b000: writeDataReg = ALUResultW;  // OP(_32), OP_IMM(_32)
+            3'b001: writeDataReg = readDataW;   // LOAD
+            3'b010: writeDataReg = PCPlus4W;    // JAL, JALR
+            3'b011: writeDataReg = immExtW;     // LUI
+            default: writeDataReg = PCPlusImmW; // AUIPC
+        endcase
+    end
     
     always @(posedge clk) begin
         //$display("Instruction %h: %h", PCF, instrF);

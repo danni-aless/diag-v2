@@ -21,21 +21,22 @@ module diagv2_core(
     wire [`AluCntrBusBits-1:0] ALUControl;
     wire [`RsltSrcBusBits-1:0] resultSrc;
     
-    wire [`DataBusBits-1:0] PCNext, PCPlus4, PCPlusImm;
+    wire [`DataBusBits-1:0] PCPlus4, PCPlusImm;
+    reg [`DataBusBits-1:0] PCNext;
     
     wire [`OpBusBits-1:0] op;
     wire [`Funct3BusBits-1:0] funct3;
     wire [`Funct7BusBits-1:0] funct7;
 
     wire [`RegAddrBits-1:0] readRegister1, readRegister2, writeRegister;
-    wire [`DataBusBits-1:0] readData1, readData2, writeDataReg;
+    wire [`DataBusBits-1:0] readData1, readData2;
+    reg  [`DataBusBits-1:0] writeDataReg;
     
     wire [`DataBusBits-1:0] immExt;
     
-    wire [`DataBusBits-1:0] srcA, srcB;
+    wire [`DataBusBits-1:0] srcA;
+    reg [`DataBusBits-1:0] srcB;
     wire zero, lt, ltu; // ALU signals
-    
-    assign PCNext = PCSrc[1] ? ALUResult : (PCSrc[0] ? PCPlusImm : PCPlus4);
     
     assign op = instr[6:0];
     assign funct3 = instr[14:12];
@@ -44,16 +45,31 @@ module diagv2_core(
     assign readRegister1 = instr[19:15];
     assign readRegister2 = instr[24:20];
     assign writeRegister = instr[11:7];
-    assign writeDataReg  = resultSrc[2] ? PCPlusImm :
-                           resultSrc[1] ? (resultSrc[0] ? immExt : PCPlus4) 
-                                        : (resultSrc[0] ? readData : ALUResult);
     assign srcA = readData1;
-    assign srcB = ALUSrc ? immExt : readData2;
     
     assign writeData = readData2;
     
     always @(posedge clk) begin
         //$display("Instruction %h: %h", PCF, instrF);
+    end
+    
+    always @(*) begin
+        case(ALUSrc) // for signal B of ALU
+            1'b0: srcB = readData2; // BRANCH, OP(_32)
+            1'b1: srcB = immExt;    // JALR, LOAD, STORE, OP_IMM(_32)
+        endcase
+        case(resultSrc) // for signal writeData of Register File
+            3'b000: writeDataReg = ALUResult;  // OP(_32), OP_IMM(_32)
+            3'b001: writeDataReg = readData;   // LOAD
+            3'b010: writeDataReg = PCPlus4;    // JAL, JALR
+            3'b011: writeDataReg = immExt;     // LUI
+            default: writeDataReg = PCPlusImm; // AUIPC
+        endcase
+        case(PCSrc) // for signal PCNext of PC
+            2'b00: PCNext = PCPlus4;     // BRANCH (not taken)
+            2'b01: PCNext = PCPlusImm;   // JAL, BRANCH (taken)
+            default: PCNext = ALUResult; // JALR
+        endcase
     end
 
     pc pc_reg(
